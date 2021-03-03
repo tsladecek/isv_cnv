@@ -12,7 +12,7 @@ rule model_gridsearch:
         gridsearch(X_train, Y_train, X_val, Y_val, model=wildcards.model,
                    params=model_search_space[wildcards.model],
                    modelpath=output.modelpath, resultspath=output.results,
-                   n_jobs=-1)
+                   n_jobs=threads)
 
 rule model_gridsearch_logtransform:
     input:
@@ -27,4 +27,4 @@ rule model_gridsearch_logtransform:
         gridsearch(X_train, Y_train, X_val, Y_val, model=wildcards.model,
                    params=model_search_space[wildcards.model],
                    modelpath=output.modelpath, resultspath=output.results,
-                   n_jobs=-1)
+                   n_jobs=threads)

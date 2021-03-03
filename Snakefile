@@ -9,5 +9,4 @@ from scripts.ml.model_search_space import model_search_space
 
 rule all:
     input:
-        "results/models/logisticregression_gain.json"
-        # gridsearch_paths
+        gridsearch_paths
