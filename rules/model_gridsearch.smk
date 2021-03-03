@@ -1,7 +1,3 @@
-rule all_gridsearch:
-    input:
-        gridsearch_paths
-
 
 rule model_gridsearch:
     input:
@@ -15,7 +11,7 @@ rule model_gridsearch:
         X_train, Y_train, X_val, Y_val = prepare_df(wildcards.cnv_type)
         gridsearch(X_train, Y_train, X_val, Y_val, model=wildcards.model,
                    params=model_search_space[wildcards.model],
-                   modelpath=output.modelpath, results_path=output.results,
+                   modelpath=output.modelpath, resultspath=output.results,
                    n_jobs=-1)
 
 rule model_gridsearch_logtransform:
@@ -30,5 +26,5 @@ rule model_gridsearch_logtransform:
         X_train, Y_train, X_val, Y_val = prepare_df(wildcards.cnv_type, logtransform=True)
         gridsearch(X_train, Y_train, X_val, Y_val, model=wildcards.model,
                    params=model_search_space[wildcards.model],
-                   modelpath=output.modelpath, results_path=output.results,
+                   modelpath=output.modelpath, resultspath=output.results,
                    n_jobs=-1)

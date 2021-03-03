@@ -93,15 +93,19 @@ def gridsearch(X_train, Y_train, X_val, Y_val, model, params, modelpath=None,
             temp_model = xgb.train(p, train_dmat, num_boost_round=500, early_stopping_rounds=15,
                                    evals=[(train_dmat, 'train'), (val_dmat, 'validation')], verbose_eval=0)
             
+            # EVALUATE
+            Y_hat_train = (temp_model.predict(train_dmat) > 0.5) * 1
+            Y_hat_val = (temp_model.predict(val_dmat) > 0.5) * 1
+            
         else:
             temp_model = deepcopy(model_dict[model]())
             temp_model.set_params(**p)
             
             temp_model.fit(X_train, Y_train)
         
-        # EVALUATE
-        Y_hat_train = temp_model.predict(X_train)
-        Y_hat_val = temp_model.predict(X_val)
+            # EVALUATE
+            Y_hat_train = temp_model.predict(X_train)
+            Y_hat_val = temp_model.predict(X_val)
         
         (TN, FP), (FN, TP) = confusion_matrix(Y_train, Y_hat_train)
         t_acc = (TN + TP) / (TN + TP + FP + FN)

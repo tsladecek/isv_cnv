@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Mar  3 11:10:47 2021
 
-@author: tomas
-"""
 import numpy as np
 
 
@@ -33,18 +29,14 @@ model_search_space = {
     "qda": {'reg_param': np.linspace(0, 1, 9)},
     "logisticregression": [
             {
-                'penalty': ['l2', 'l1'],
-                'solver': ['liblinear'],
-                'C': [0.001, 0.01, 0.1, 1, 10]
-            },
-            {
                 'penalty': ['l2'],
-                'solver': ['lbfgs'],
-                'C': [0.001, 0.01, 0.1, 1, 10]
-            }
+                'solver': ['liblinear', 'lbfgs'],
+                'C': [0.001, 0.01, 0.1, 1, 10],
+                'max_iter': [500]
+            },
     ],
     "randomforest": {
-        'n_estimators': [1000, 3000],
+        'n_estimators': [500, 1000],
         'max_depth': np.arange(2, 10, 2),
         'min_samples_leaf': np.arange(2, 10, 2),
         'max_features': ['sqrt'],
@@ -66,13 +58,12 @@ model_search_space = {
         'weights': ['uniform', 'distance'],
         'algorithm': ['auto']
     },
-    "xgboost":{
+    "xgboost": {
         'max_depth': [2, 3, 6, 8],
         'eta': [0.01, 0.1, 0.3, 1],
-        'gamma': [0, 0.01, 0.1, 1],
+        'gamma': [0, 0.01, 0.1, 1, 10],
         'subsample': [0.2, 0.4, 0.6, 0.8, 1],
         'lambda': [0.1, 1, 10, 100],
-        'gamma': [0.1, 1, 5, 10],
         'colsample_bytree': [0.2, 0.4, 0.6, 0.8]
     }
 }
