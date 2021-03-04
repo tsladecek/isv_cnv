@@ -23,10 +23,9 @@ model_search_space = {
                 }
     ],
     "lda": [
-                {'solver': ['lsqr', 'eigen'], 'shrinkage':['auto']},
-                {'solver': ['lsqr', 'eigen'], 'shrinkage':np.linspace(0.01, 0.99, 20)}
+            {'solver': ['svd']}
     ],
-    "qda": {'reg_param': np.linspace(0, 1, 9)},
+    "qda": {'reg_param': [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]},
     "logisticregression": [
             {
                 'penalty': ['l2'],
@@ -37,8 +36,8 @@ model_search_space = {
     ],
     "randomforest": {
         'n_estimators': [500, 1000],
-        'max_depth': np.arange(2, 10, 2),
-        'min_samples_leaf': np.arange(2, 10, 2),
+        'max_depth': [4, 6, 8, 10],
+        'min_samples_leaf': [2, 4, 6, 8, 10],
         'max_features': ['sqrt'],
         'class_weight': [None, 'balanced'],
         'bootstrap': [True, False]
