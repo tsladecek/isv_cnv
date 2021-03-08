@@ -1,3 +1,13 @@
+configfile: "config.yaml"
+
+rule gzip_model:
+    input:
+        model    = "{model_dir}/{model}_{cnv_type}.json",
+    output:
+        gzipped  = "{model_dir}/{model}_{cnv_type}.json.gz",
+    shell:
+        "gzip -c {input} > {output}"
+
 
 rule model_gridsearch:
     input:
