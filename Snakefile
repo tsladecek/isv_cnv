@@ -9,4 +9,5 @@ from scripts.ml.model_search_space import model_search_space
 
 rule all:
     input:
-        gridsearch_paths
+        all_gridsearch_paths
+

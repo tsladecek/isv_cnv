@@ -5,12 +5,13 @@ Prepare df for training
 """
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import RobustScaler, MinMaxScaler
 from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES
 
 
 def prepare_df(cnv_type,
-               logtransform=False):
+               logtransform=False,
+               robustscaler=True):
     """
     Extract relevant attributes for training and return training dataset
     together with labels, and scale the dataset - do same for validation dataset
@@ -41,7 +42,10 @@ def prepare_df(cnv_type,
         X_val = np.log(X_val + 1)
     
     # Scale
-    scaler = RobustScaler()
+    if robustscaler:
+        scaler = RobustScaler()
+    else:
+        scaler = MinMaxScaler()
     X_train = scaler.fit_transform(X_train)
     
     X_val = scaler.transform(X_val)
@@ -49,7 +53,7 @@ def prepare_df(cnv_type,
     return X_train, Y_train, X_val, Y_val
 
 
-def prepare_test(cnv_type, logtransform=False):
+def prepare_test(cnv_type, logtransform=False, robustscaler=True):
     """
     Preprocess test dataset - scaling + optional logtransform
 
@@ -79,7 +83,11 @@ def prepare_test(cnv_type, logtransform=False):
         X_test = np.log(X_test + 1)
     
     # Scale
-    scaler = RobustScaler()
+    if robustscaler:
+        scaler = RobustScaler()
+    else:
+        scaler = MinMaxScaler()
+
     X_train = scaler.fit(X_train)
     
     X_test = scaler.transform(X_test)
