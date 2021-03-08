@@ -90,6 +90,7 @@ def gridsearch(X_train, Y_train, X_val, Y_val, model, params, modelpath=None,
         # FIT
         if model == 'xgboost':
             p['nthread'] = n_jobs
+            p['objective'] = 'binary:logistic'
             temp_model = xgb.train(p, train_dmat, num_boost_round=500, early_stopping_rounds=15,
                                    evals=[(train_dmat, 'train'), (val_dmat, 'validation')], verbose_eval=0)
             
