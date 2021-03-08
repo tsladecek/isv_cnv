@@ -1,5 +1,11 @@
 *__pycache__*
 .snakemake/
 ClassifyCNV-1.1.0/
-results/*svc*
-results/*randomforest*.json
+
+results/gridsearch_results/svc*
+results/gridsearch_results_log/svc*
+results/models/svc*
+results/models_log/svc*
+
+results/models/randomforest*.json
+results/models_log/randomforest*.json
