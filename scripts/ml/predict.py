@@ -15,6 +15,10 @@ from scripts.ml.prepare_df_for_training import prepare_df, prepare_test, prepare
 
 # %%
 def open_model(model_path):
+    """Open and return a model from json file
+    
+    :param model_path: path to the model
+    """
     if model_path.endswith('gz'):
         with gzip.open(model_path, 'r') as f:
             model = f.read()
@@ -34,6 +38,15 @@ def open_model(model_path):
 
 # %%
 def predict(model_path, datapath, train_data_path=None, proba=False, robust=True):
+    """Return model predictions for a selected dataframe
+
+    :param model_path: path to the model (ie."results/ISV_gain.json.gz")
+    :param datapath: path to the dataframe to be predicted
+    :param train_data_path: path to training dataframe - only necessary id predicting data other than train/val/test
+    :param proba: return probabilities
+    :param robust: use robust scaling. Otherwise MinMax is used
+    :returns: (yhat, y): predicted and real values
+    """
     cnv_type = ['loss', 'gain'][('gain' in model_path) * 1]
     
     logtransform = (model_path.split('_')[-1].split('.')[0] == 'log')

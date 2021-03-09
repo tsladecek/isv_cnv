@@ -105,8 +105,10 @@ def prepare(cnv_type,
     together with labels, and scale the dataset - do same for validation dataset
 
     :param cnv_type: type of the cnv == ["loss", "gain"]
+    :param train_data_path: path to training data (data/train...)
+    :data_path: path to the data to predict
     :param logtransform: whether data should be logtransformed
-    :return (X_train, Y_train, X_train_mm, X_val, Y_val, X_val_mm)
+    :return (X, y)
     """
     
     if cnv_type == 'loss':
