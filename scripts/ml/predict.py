@@ -11,7 +11,7 @@ import json
 from sklearn_json import from_json, from_dict
 import xgboost as xgb
 from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES
-from scripts.ml.prepare_df_for_training import prepare_df, prepare_test
+from scripts.ml.prepare_df_for_training import prepare_df, prepare_test, prepare
 
 # %%
 def open_model(model_path):
@@ -33,7 +33,7 @@ def open_model(model_path):
 
 
 # %%
-def predict(model_path, datapath, proba=False, robust=True):
+def predict(model_path, datapath, train_data_path=None, proba=False, robust=True):
     cnv_type = ['loss', 'gain'][('gain' in model_path) * 1]
     
     logtransform = (model_path.split('_')[-1].split('.')[0] == 'log')
@@ -49,8 +49,11 @@ def predict(model_path, datapath, proba=False, robust=True):
             X, y = X_val, Y_val
     
     elif 'test' in datapath:
-        X, y = prepare_test(cnv_type, logtransform)
+        X, y = prepare_test(cnv_type, logtransform, robustscaler=robust)
     
+    else:
+        X, y = prepare(cnv_type, logtransform=logtransform, robustscaler=robust, 
+                       data_path=datapath, train_data_path=train_data_path)
     if proba:
         if 'xgboost' in model_path:
             X_dmat = xgb.DMatrix(X, y)
