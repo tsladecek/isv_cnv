@@ -2,12 +2,9 @@
 .snakemake/
 ClassifyCNV-1.1.0/
 
-results/gridsearch_results/svc*
-results/gridsearch_results_log/svc*
-results/models/svc*
-results/models_log/svc*
-
-results/models/randomforest*.json
-results/models_log/randomforest*.json
+results/robust/models/randomforest*.json
+results/robust/models_log/randomforest*.json
+results/minmax/models/randomforest*.json
+results/minmax/models_log/randomforest*.json
 
 plots/*.jpg
