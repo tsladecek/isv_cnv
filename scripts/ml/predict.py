@@ -11,7 +11,7 @@ import json
 from sklearn_json import from_json, from_dict
 import xgboost as xgb
 from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES
-from scripts.ml.prepare_df_for_training import prepare_df, prepare_test, prepare
+from scripts.ml.prepare_df import prepare_df, prepare_test, prepare
 
 # %%
 def open_model(model_path):
