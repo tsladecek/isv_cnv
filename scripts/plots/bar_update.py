@@ -16,19 +16,19 @@ import matplotlib.pyplot as plt
 # threshold = 0.95
 # custom_label = None
 
-def bar_update_results(results, model_path, data_path, threshold, custom_label=None):
+def bar_update_results(results, model_path, data_path, threshold, custom_label=None, robust=True):
 
     model = model_path.split('/')[-1].split('_')[0]
     cnv_type = model_path.split('/')[-1].split('_')[1]
     
     
     if threshold == 0.5:
-        yhat, y = predict(model_path, data_path)
+        yhat, y = predict(model_path, data_path, robust=robust)
         
         results['uncertain'].append(0)
     
     else:
-        yhat, y = predict(model_path, data_path, proba=True)
+        yhat, y = predict(model_path, data_path, proba=True, robust=robust)
         t = (yhat >= threshold) + (yhat <= (1 - threshold))
         yhat, y = yhat[t], y[t]
         yhat = (yhat > 0.5) * 1

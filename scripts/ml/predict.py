@@ -33,7 +33,7 @@ def open_model(model_path):
 
 
 # %%
-def predict(model_path, datapath, proba=False):
+def predict(model_path, datapath, proba=False, robust=True):
     cnv_type = ['loss', 'gain'][('gain' in model_path) * 1]
     
     logtransform = (model_path.split('_')[-1].split('.')[0] == 'log')
@@ -41,7 +41,7 @@ def predict(model_path, datapath, proba=False):
     model = open_model(model_path)
     
     if 'train' in datapath or 'validation' in datapath:
-        X_train, Y_train, X_val, Y_val = prepare_df(cnv_type, logtransform)
+        X_train, Y_train, X_val, Y_val = prepare_df(cnv_type, logtransform, robustscaler=robust)
         
         if 'train' in datapath:
             X, y = X_train, Y_train
