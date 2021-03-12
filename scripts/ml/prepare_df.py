@@ -11,7 +11,8 @@ from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES
 
 def prepare_df(cnv_type,
                logtransform=False,
-               robustscaler=True):
+               robustscaler=True,
+               raw=False):
     """
     Extract relevant attributes for training and return training dataset
     together with labels, and scale the dataset - do same for validation dataset
@@ -36,7 +37,10 @@ def prepare_df(cnv_type,
     # Validation
     Y_val = X_val.clinsig
     X_val = X_val.loc[:, attributes]
-        
+    
+    if raw:
+        return X_train, Y_train, X_val, Y_val
+    
     if logtransform:
         X_train = np.log(X_train + 1)
         X_val = np.log(X_val + 1)

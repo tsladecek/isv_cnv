@@ -8,3 +8,11 @@ results/minmax/models/randomforest*.json
 results/minmax/models_log/randomforest*.json
 
 plots/*.jpg
+
+*ipynb_checkpoints*
+
+data/shap_data/
+
+scripts/plots/shap_plots.ipynb
+
+scripts/plots/length_stratification.py
