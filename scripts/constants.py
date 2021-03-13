@@ -7,7 +7,7 @@ CNV specific constants and attribute lists
 DPI = 350
 
 LOSS_ATTRIBUTES = [
-    'length',
+#     'length',
     'gencode_genes',
     'protein_coding',
     'pseudogenes',
@@ -32,7 +32,7 @@ LOSS_ATTRIBUTES = [
 
 
 GAIN_ATTRIBUTES = [
-    'length',
+#     'length',
     'gencode_genes',
     'protein_coding',
     'pseudogenes',
