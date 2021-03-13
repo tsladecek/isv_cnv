@@ -8,3 +8,5 @@ results/minmax/models/randomforest*.json
 results/minmax/models_log/randomforest*.json
 
 plots/*.jpg
+
+results/old

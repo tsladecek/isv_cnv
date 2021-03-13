@@ -1,2 +1,0 @@
-	params	train_accuracy	train_sensitivity	train_specificity	validation_accuracy	validation_sensitivity	validation_specificity
-0	{'solver': 'svd'}	0.9699308142629058	0.8755287009063444	0.9965876130353182	0.9639975170701428	0.8397626112759644	0.9968602825745683
