@@ -11,10 +11,14 @@ import json
 from sklearn_json import from_json, from_dict
 import xgboost as xgb
 from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES
-from scripts.ml.prepare_df_for_training import prepare_df, prepare_test
+from scripts.ml.prepare_df import prepare_df, prepare_test, prepare
 
 # %%
 def open_model(model_path):
+    """Open and return a model from json file
+    
+    :param model_path: path to the model
+    """
     if model_path.endswith('gz'):
         with gzip.open(model_path, 'r') as f:
             model = f.read()
@@ -33,7 +37,16 @@ def open_model(model_path):
 
 
 # %%
-def predict(model_path, datapath, proba=False):
+def predict(model_path, datapath, train_data_path=None, proba=False, robust=True):
+    """Return model predictions for a selected dataframe
+
+    :param model_path: path to the model (ie."results/ISV_gain.json.gz")
+    :param datapath: path to the dataframe to be predicted
+    :param train_data_path: path to training dataframe - only necessary id predicting data other than train/val/test
+    :param proba: return probabilities
+    :param robust: use robust scaling. Otherwise MinMax is used
+    :returns: (yhat, y): predicted and real values
+    """
     cnv_type = ['loss', 'gain'][('gain' in model_path) * 1]
     
     logtransform = (model_path.split('_')[-1].split('.')[0] == 'log')
@@ -41,7 +54,7 @@ def predict(model_path, datapath, proba=False):
     model = open_model(model_path)
     
     if 'train' in datapath or 'validation' in datapath:
-        X_train, Y_train, X_val, Y_val = prepare_df(cnv_type, logtransform)
+        X_train, Y_train, X_val, Y_val = prepare_df(cnv_type, logtransform, robustscaler=robust)
         
         if 'train' in datapath:
             X, y = X_train, Y_train
@@ -49,8 +62,11 @@ def predict(model_path, datapath, proba=False):
             X, y = X_val, Y_val
     
     elif 'test' in datapath:
-        X, y = prepare_test(cnv_type, logtransform)
+        X, y = prepare_test(cnv_type, logtransform, robustscaler=robust)
     
+    else:
+        X, y = prepare(cnv_type, logtransform=logtransform, robustscaler=robust, 
+                       data_path=datapath, train_data_path=train_data_path)
     if proba:
         if 'xgboost' in model_path:
             X_dmat = xgb.DMatrix(X, y)

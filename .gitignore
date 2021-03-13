@@ -13,3 +13,10 @@ results/
 plots/*.jpg
 
 results/old
+*ipynb_checkpoints*
+
+data/shap_data/
+
+scripts/plots/shap_plots.ipynb
+
+scripts/plots/length_stratification.py
