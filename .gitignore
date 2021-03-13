@@ -7,6 +7,9 @@ results/robust/models_log/randomforest*.json
 results/minmax/models/randomforest*.json
 results/minmax/models_log/randomforest*.json
 
+results/
+!results/README.md
+
 plots/*.jpg
 
 results/old
