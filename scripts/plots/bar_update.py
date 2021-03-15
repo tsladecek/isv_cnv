@@ -25,7 +25,7 @@ def bar_update_results(results, model_path, data_path, threshold, custom_label=N
     if threshold == 0.5:
         yhat, y = predict(model_path, data_path, robust=robust)
         
-        results['uncertain'].append(0)
+        u = 0
     
     else:
         yhat, y = predict(model_path, data_path, proba=True, robust=robust)
@@ -33,17 +33,23 @@ def bar_update_results(results, model_path, data_path, threshold, custom_label=N
         yhat, y = yhat[t], y[t]
         yhat = (yhat > 0.5) * 1
         
-        results['uncertain'].append(np.sum(t == False))
+        u = np.sum(t == False)
+    
+    results['uncertain'].append(u)
     
     accuracy = np.mean(y == yhat)
     
+    c = np.sum(y == yhat)
+    i = np.sum(y != yhat)
+    
     if custom_label:
         results['label'].append(custom_label)
-    else:   
-        results['label'].append('{}\nAccuracy: {:.3f}'.format(model, accuracy))
+    else:
+        
+        results['label'].append('{}\nAccuracy: {:.3f}\nIncluded: {:2.2f}%'.format(model, accuracy, (c + i) / (c + i + u)))
     
-    results['correct'].append(np.sum(y == yhat))
-    results['incorrect'].append(np.sum(y != yhat))
+    results['correct'].append(c)
+    results['incorrect'].append(i)
     
     return results
     
