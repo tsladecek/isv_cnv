@@ -8,7 +8,11 @@ from scripts.ml.gridsearch import gridsearch
 from scripts.ml.predict import predict
 from scripts.ml.prepare_df import prepare_df
 import xgboost as xgb
+from sklearn.ensemble import RandomForestClassifier
 import numpy as np
+from sklearn_json import to_dict
+import gzip
+import json
 
 # %%
 ########
@@ -58,6 +62,42 @@ print(f'Min: {min(yh)}, Max: {max(yh)}')
 # save new model
 g.save_model('results/robust/models/xgboost_gain.json')
 
+# %% RANDOM FOREST
+# p = {'n_estimators': 500,
+#       'max_depth': 6,
+#       'min_samples_leaf': 2,
+#       'max_features': 'sqrt',
+#       'class_weight': 'balanced',
+#       'bootstrap': True,
+#       'random_state': 1618,
+#       'n_jobs': 4}
+
+p = {'n_estimators': 500,
+      'max_depth': 6,
+      'min_samples_leaf': 2,
+      'max_features': 'sqrt',
+      'class_weight': 'balanced',
+      'bootstrap': True,
+      'random_state': 1618,
+      'n_jobs': 4}
+
+r = RandomForestClassifier()
+r.set_params(**p)
+r.fit(train_X, train_Y)
+
+tyh = r.predict(train_X)
+yh = r.predict(val_X)
+p = r.predict_proba(val_X)[:, 1]
+
+print('Train Accuracy: ' + str(np.mean(tyh == train_Y)))
+print('Valid Accuracy: ' + str(np.mean(yh == val_Y)))
+print(f'Min: {min(p)}, Max: {max(p)}')
+
+rd = to_dict(r)
+
+with gzip.open('results/robust/models/randomforest_gain.json.gz', 'wt', encoding="ascii") as f:
+    json.dump(rd, f)
+
 # %%
 ########
 # LOSS #
@@ -104,3 +144,39 @@ print(f'Min: {min(yh)}, Max: {max(yh)}')
 
 # save new model
 g.save_model('results/robust/models/xgboost_loss.json')
+
+# %% RANDOM FOREST
+# p = {'n_estimators': 500,
+#       'max_depth': 6,
+#       'min_samples_leaf': 2,
+#       'max_features': 'sqrt',
+#       'class_weight': 'balanced',
+#       'bootstrap': True,
+#       'random_state': 1618,
+#       'n_jobs': 4}
+
+p = {'n_estimators': 500,
+     'max_depth': 8,
+     'min_samples_leaf': 2,
+     'max_features': 'sqrt',
+     'class_weight': 'balanced',
+     'bootstrap': True,
+     'random_state': 1618,
+     'n_jobs': 4}
+
+r = RandomForestClassifier()
+r.set_params(**p)
+r.fit(train_X, train_Y)
+
+tyh = r.predict(train_X)
+yh = r.predict(val_X)
+p = r.predict_proba(val_X)[:, 1]
+
+print('Train Accuracy: ' + str(np.mean(tyh == train_Y)))
+print('Valid Accuracy: ' + str(np.mean(yh == val_Y)))
+print(f'Min: {min(p)}, Max: {max(p)}')
+
+rd = to_dict(r)
+
+with gzip.open('results/robust/models/randomforest_loss.json.gz', 'wt', encoding="ascii") as f:
+    json.dump(rd, f)

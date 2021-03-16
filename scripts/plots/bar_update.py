@@ -46,7 +46,7 @@ def bar_update_results(results, model_path, data_path, threshold, custom_label=N
         results['label'].append(custom_label)
     else:
         
-        results['label'].append('{}\nAccuracy: {:.3f}\nIncluded: {:2.2f}%'.format(model, accuracy, (c + i) / (c + i + u)))
+        results['label'].append('{}\nAccuracy: {:2.2f}%\nIncluded: {:2.2f}%'.format(model, 100 * accuracy, 100 *  (c + i) / (c + i + u)))
     
     results['correct'].append(c)
     results['incorrect'].append(i)

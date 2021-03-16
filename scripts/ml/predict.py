@@ -10,6 +10,8 @@ import gzip
 import json
 from sklearn_json import from_json, from_dict
 import xgboost as xgb
+import pandas as pd
+import numpy as np
 from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES
 from scripts.ml.prepare_df import prepare_df, prepare_test, prepare
 
@@ -84,3 +86,63 @@ def predict(model_path, datapath, train_data_path=None, proba=False, robust=True
     
     return yhat, y
 
+# %% Ensemble Predict
+def ensemble_train(cnv_type):
+    models  = ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']
+    
+    res = {}
+    
+    for model in models:
+        if model == 'randomforest':
+            model_path = f'results/robust/models/{model}_{cnv_type}.json.gz'
+        else:
+            model_path = f'results/robust/models/{model}_{cnv_type}.json'
+        data_path = f'data/train_{cnv_type}.tsv.gz'
+        
+        yhat, y = predict(model_path, data_path, proba=True)
+        
+        res[model] = yhat
+        
+    res = pd.DataFrame(res)
+    res = res.astype({"xgboost": np.float})
+
+    # FIT ENSEMBLE XGB
+    dmat = xgb.DMatrix(res, y)
+    
+    x = xgb.train({"max_depth": 2, 'seed': 1618}, dmat, num_boost_round=30)
+    
+    x.save_model(f'results/robust/ensemble_xgb_{cnv_type}.json')
+    
+# %%
+# for c in ['loss', 'gain']:
+#     ensemble_train(c)
+
+# %%
+def ensemble_predict(cnv_type, data_path):
+    
+    # Prepare data
+    models  = ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']
+    
+    res = {}
+    
+    for model in models:
+        if model == 'randomforest':
+            model_path = f'results/robust/models/{model}_{cnv_type}.json.gz'
+        else:
+            model_path = f'results/robust/models/{model}_{cnv_type}.json'
+        
+        yhat, y = predict(model_path, data_path, proba=True)
+        
+        res[model] = yhat
+        
+    res = pd.DataFrame(res)
+    res = res.astype({"xgboost": np.float})
+    
+    dmat = xgb.DMatrix(res)
+    
+    # load model
+    x = xgb.Booster()
+    x.load_model(f'results/robust/ensemble_xgb_{cnv_type}.json')
+    
+    # predict
+    return x.predict(dmat), y

@@ -44,16 +44,16 @@ for i, threshold in enumerate([0.5, 0.95, 0.99]):
 ax[0, 0].set_title('Copy Number Loss')
 ax[0, 1].set_title('Copy Number Gain')
 
-ax[0, 0].set_ylabel(f'Threshold: 0.5', rotation=0, labelpad=70)
-ax[1, 0].set_ylabel(f'Threshold: 0.95', rotation=0, labelpad=70)
-ax[2, 0].set_ylabel(f'Threshold: 0.99', rotation=0, labelpad=70)
+ax[0, 0].set_ylabel(f'Threshold: 50%', rotation=0, labelpad=70)
+ax[1, 0].set_ylabel(f'Threshold: 95%', rotation=0, labelpad=70)
+ax[2, 0].set_ylabel(f'Threshold: 99%', rotation=0, labelpad=70)
 
 
 # fig.suptitle(f'Probability Threshold: {threshold}', fontsize=20)
 fig.tight_layout()
 
 
-fig.savefig(f'plots/model_bars.jpg', dpi=DPI)
+fig.savefig(f'plots/model_bars.jpg')
 # fig.savefig(output_paths[cnv_type], dpi=DPI)
 
 
