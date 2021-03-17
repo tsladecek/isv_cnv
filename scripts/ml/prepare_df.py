@@ -57,48 +57,6 @@ def prepare_df(cnv_type,
     return X_train, Y_train, X_val, Y_val
 
 
-def prepare_test(cnv_type, logtransform=False, robustscaler=True):
-    """
-    Preprocess test dataset - scaling + optional logtransform
-
-    :param cnv_type    : type of the cnv == ["loss", "gain"]
-    :param logtransform: whether data should be logtransformed 
-    :return (X_test, Y_test)
-    """
-    
-    if cnv_type == 'loss':
-        attributes = LOSS_ATTRIBUTES
-    else:
-        attributes = GAIN_ATTRIBUTES
-            
-    X_train = pd.read_csv(f"data/train_{cnv_type}.tsv.gz", compression='gzip', sep='\t')
-    X_test = pd.read_csv(f"data/test_{cnv_type}.tsv.gz", compression='gzip', sep='\t')
-    
-    # Train
-    Y_train = X_train.clinsig
-    X_train = X_train.loc[:, attributes]
-    
-    # Test
-    Y_test = X_test.clinsig
-    X_test = X_test.loc[:, attributes]
-        
-    if logtransform:
-        X_train = np.log(X_train + 1)
-        X_test = np.log(X_test + 1)
-    
-    # Scale
-    if robustscaler:
-        scaler = RobustScaler()
-    else:
-        scaler = MinMaxScaler()
-
-    X_train = scaler.fit(X_train)
-    
-    X_test = scaler.transform(X_test)
-    
-    return X_test, Y_test
-
-
 def prepare(cnv_type,
             train_data_path,
             data_path,

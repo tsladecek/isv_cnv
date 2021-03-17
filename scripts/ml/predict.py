@@ -13,7 +13,7 @@ import xgboost as xgb
 import pandas as pd
 import numpy as np
 from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES
-from scripts.ml.prepare_df import prepare_df, prepare_test, prepare
+from scripts.ml.prepare_df import prepare_df, prepare
 
 # %%
 def open_model(model_path):
@@ -62,9 +62,6 @@ def predict(model_path, datapath, train_data_path=None, proba=False, robust=True
             X, y = X_train, Y_train
         else:
             X, y = X_val, Y_val
-    
-    elif 'test' in datapath:
-        X, y = prepare_test(cnv_type, logtransform, robustscaler=robust)
     
     else:
         X, y = prepare(cnv_type, logtransform=logtransform, robustscaler=robust, 
