@@ -6,7 +6,7 @@ CNV specific constants and attribute lists
 
 DPI = 350
 
-modelfmt = 'results/ISV_{}.json.gz'
+modelfmt = 'results/ISV_{}.json'
 
 LOSS_ATTRIBUTES = [
 #     'length',

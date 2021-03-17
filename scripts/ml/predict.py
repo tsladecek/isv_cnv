@@ -68,7 +68,7 @@ def predict(model_path, datapath, train_data_path=None, proba=False, robust=True
                        data_path=datapath, train_data_path=train_data_path)
     if proba:
         if 'xgboost' in model_path:
-            X_dmat = xgb.DMatrix(X, y)
+            X_dmat = xgb.DMatrix(X)
             yhat = model.predict(X_dmat)
         else:
             yhat = model.predict_proba(X)[:, 1]
