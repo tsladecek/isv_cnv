@@ -29,10 +29,11 @@ for i, threshold in enumerate([0.5, 0.95, 0.99]):
         results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
             
         for model in models:
-            if model == 'randomforest':
-                results = bar_update_results(results, f'results/robust/models/{model}_{cnv_type}.json.gz', f'data/validation_{cnv_type}.tsv.gz', threshold)
-            else:
-                results = bar_update_results(results, f'results/robust/models/{model}_{cnv_type}.json', f'data/validation_{cnv_type}.tsv.gz', threshold)
+            # if model == 'randomforest':
+            #     results = bar_update_results(results, f'results/robust/models/{model}_{cnv_type}.json.gz', f'data/validation_{cnv_type}.tsv.gz', threshold)
+            # else:
+            #     results = bar_update_results(results, f'results/robust/models/{model}_{cnv_type}.json', f'data/validation_{cnv_type}.tsv.gz', threshold)
+            results = bar_update_results(results, f'results/robust/models/{model}_{cnv_type}.json', f'data/validation_{cnv_type}.tsv.gz', threshold)
         
         res = pd.DataFrame(results)
         res.iloc[::-1].set_index('label').plot(kind='barh', stacked=True, ax=ax[i, j], width=0.8,
