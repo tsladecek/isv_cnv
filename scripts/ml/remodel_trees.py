@@ -9,8 +9,9 @@ from scripts.ml.predict import predict
 from scripts.ml.prepare_df import prepare_df
 import xgboost as xgb
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import recall_score
 import numpy as np
-from sklearn_json import to_dict
+from sklearn_json import to_dict, to_json
 import gzip
 import json
 
@@ -37,9 +38,9 @@ val_dmat = xgb.DMatrix(val_X, val_Y)
 #      'nthread': 4,
 #      'objective': 'binary:logistic'}
 
-p = {'max_depth': 8,
+p = {'max_depth': 6,
      'eta': 0.5,
-     'gamma': 1,
+     'gamma': 0.1,
      'subsample': 1,
      'lambda': 1,
      'colsample_bytree': 0.5,
@@ -48,7 +49,7 @@ p = {'max_depth': 8,
      'nthread': 4,
      'objective': 'binary:logistic'}
 
-g = xgb.train(p, train_dmat, num_boost_round=500, early_stopping_rounds=15,
+g = xgb.train(p, train_dmat, num_boost_round=30, early_stopping_rounds=15,
               evals=[(train_dmat, 'train'), (val_dmat, 'validation')], verbose_eval=0)
 
 tyh = g.predict(train_dmat)
@@ -56,6 +57,8 @@ yh = g.predict(val_dmat)
 
 print('Train Accuracy: ' + str(np.mean(((tyh > 0.5) * 1) == train_Y)))
 print('Valid Accuracy: ' + str(np.mean(((yh > 0.5) * 1) == val_Y)))
+print('Sensitivity   : ' + str(recall_score(val_Y, ((yh > 0.5) * 1))))
+print('Specificity   : ' + str(recall_score(1 - val_Y, 1 - ((yh > 0.5) * 1))))
 print(f'Min: {min(yh)}, Max: {max(yh)}')
 
 
@@ -72,7 +75,7 @@ g.save_model('results/robust/models/xgboost_gain.json')
 #       'random_state': 1618,
 #       'n_jobs': 4}
 
-p = {'n_estimators': 500,
+p = {'n_estimators': 80,
       'max_depth': 6,
       'min_samples_leaf': 2,
       'max_features': 'sqrt',
@@ -91,12 +94,16 @@ p = r.predict_proba(val_X)[:, 1]
 
 print('Train Accuracy: ' + str(np.mean(tyh == train_Y)))
 print('Valid Accuracy: ' + str(np.mean(yh == val_Y)))
+print('Sensitivity   : ' + str(recall_score(val_Y, yh)))
+print('Specificity   : ' + str(recall_score(1 - val_Y, 1 - yh)))
 print(f'Min: {min(p)}, Max: {max(p)}')
 
-rd = to_dict(r)
+to_json(r, 'results/robust/models/randomforest_gain.json')
 
-with gzip.open('results/robust/models/randomforest_gain.json.gz', 'wt', encoding="ascii") as f:
-    json.dump(rd, f)
+# rd = to_dict(r)
+
+# with gzip.open('results/robust/models/randomforest_gain.json.gz', 'wt', encoding="ascii") as f:
+#     json.dump(rd, f)
 
 # %%
 ########
@@ -121,17 +128,17 @@ val_dmat = xgb.DMatrix(val_X, val_Y)
 #      'objective': 'binary:logistic'}
 
 p = {'max_depth': 8,
-     'eta': 0.1,
-     'gamma': 0.01, 
-     'subsample': 0.4,
-     'lambda': 0.1,
-     'colsample_bytree': 0.6,
-     'scale_pos_weight': np.sqrt(sum(train_Y == 0) / sum(train_Y == 1)),
+     'eta': 1, # 0.1,
+     'gamma': 0, # 0.01, 
+     'subsample': 0.6,# 0.4,
+     'lambda': 10, # 0.1,
+     'colsample_bytree': 0.8,
+     'scale_pos_weight': sum(train_Y == 0) / sum(train_Y == 1),# np.sqrt(sum(train_Y == 0) / sum(train_Y == 1)),
      'seed': 1618,
      'nthread': 4,
      'objective': 'binary:logistic'}
 
-g = xgb.train(p, train_dmat, num_boost_round=500, early_stopping_rounds=15,
+g = xgb.train(p, train_dmat, num_boost_round=30, early_stopping_rounds=15,
               evals=[(train_dmat, 'train'), (val_dmat, 'validation')], verbose_eval=0)
 
 tyh = g.predict(train_dmat)
@@ -139,6 +146,8 @@ yh = g.predict(val_dmat)
 
 print('Train Accuracy: ' + str(np.mean(((tyh > 0.5) * 1) == train_Y)))
 print('Valid Accuracy: ' + str(np.mean(((yh > 0.5) * 1) == val_Y)))
+print('Sensitivity   : ' + str(recall_score(val_Y, ((yh > 0.5) * 1))))
+print('Specificity   : ' + str(recall_score(1 - val_Y, 1 - ((yh > 0.5) * 1))))
 print(f'Min: {min(yh)}, Max: {max(yh)}')
 
 
@@ -155,12 +164,12 @@ g.save_model('results/robust/models/xgboost_loss.json')
 #       'random_state': 1618,
 #       'n_jobs': 4}
 
-p = {'n_estimators': 500,
-     'max_depth': 8,
+p = {'n_estimators': 80,
+     'max_depth': 10,
      'min_samples_leaf': 2,
      'max_features': 'sqrt',
      'class_weight': 'balanced',
-     'bootstrap': True,
+     'bootstrap': False,
      'random_state': 1618,
      'n_jobs': 4}
 
@@ -174,9 +183,13 @@ p = r.predict_proba(val_X)[:, 1]
 
 print('Train Accuracy: ' + str(np.mean(tyh == train_Y)))
 print('Valid Accuracy: ' + str(np.mean(yh == val_Y)))
+print('Sensitivity   : ' + str(recall_score(val_Y, yh)))
+print('Specificity   : ' + str(recall_score(1 - val_Y, 1 - yh)))
 print(f'Min: {min(p)}, Max: {max(p)}')
 
-rd = to_dict(r)
+to_json(r, 'results/robust/models/randomforest_loss.json')
 
-with gzip.open('results/robust/models/randomforest_loss.json.gz', 'wt', encoding="ascii") as f:
-    json.dump(rd, f)
+# rd = to_dict(r)
+
+# with gzip.open('results/robust/models/randomforest_loss.json.gz', 'wt', encoding="ascii") as f:
+#     json.dump(rd, f)
