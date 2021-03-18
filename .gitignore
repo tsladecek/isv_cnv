@@ -9,8 +9,6 @@ results/minmax/models_log/randomforest*.json
 
 !results/README.md
 
-plots/*.jpg
-plots/*.png
 !plots/README.md
 
 results/old

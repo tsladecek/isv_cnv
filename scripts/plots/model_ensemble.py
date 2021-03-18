@@ -22,9 +22,6 @@ for j, cnv_type in enumerate(['loss', 'gain']):
     res = {}
     
     for model in models:
-        # if model == 'randomforest':
-        #     model_path = f'results/robust/models/{model}_{cnv_type}.json.gz'
-        # else:
         model_path = f'results/robust/models/{model}_{cnv_type}.json'
         data_path = f'data/validation_{cnv_type}.tsv.gz'
             
@@ -74,7 +71,6 @@ for j, cnv_type in enumerate(['loss', 'gain']):
                                                 color=["#009900", "#C0C0C0", "#FF0000"])
         
         ax[i, j].get_legend().remove()
-        # ax[i, j].set_title(f'copy number {cnv_type}')
         ax[i, j].set_ylabel('')
 
 
