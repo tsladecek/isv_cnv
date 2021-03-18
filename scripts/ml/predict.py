@@ -28,14 +28,18 @@ def open_model(model_path):
             model = from_dict(model)
         return model
     
-    elif "xgboost" in model_path:
-        model = xgb.Booster()
-        model.load_model(model_path)
-        return model
-    
     else:
-        model = from_json(model_path)
-        return model
+        with open('results/ISV_gain.json', 'r') as f:
+            a = f.readline()
+
+        if a.startswith('{"learner"'):
+            model = xgb.Booster()
+            model.load_model(model_path)
+            return model
+        
+        else:
+            model = from_json(model_path)
+            return model
 
 
 # %%
@@ -67,14 +71,14 @@ def predict(model_path, datapath, train_data_path=None, proba=False, robust=True
         X, y = prepare(cnv_type, logtransform=logtransform, robustscaler=robust, 
                        data_path=datapath, train_data_path=train_data_path)
     if proba:
-        if 'xgboost' in model_path:
+        if isinstance(model, xgb.core.Booster):
             X_dmat = xgb.DMatrix(X)
             yhat = model.predict(X_dmat)
         else:
             yhat = model.predict_proba(X)[:, 1]
     
     else:
-        if 'xgboost' in model_path:
+        if isinstance(model, xgb.core.Booster):
             X_dmat = xgb.DMatrix(X)
             yhat = model.predict(X_dmat)
             yhat = (yhat > 0.5) * 1
