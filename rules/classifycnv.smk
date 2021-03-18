@@ -1,5 +1,16 @@
 import pandas as pd
 
+rule all_classifycnv:
+    input:
+        validation_loss = "data/classifycnv/classifycnv_validation_loss.tsv",
+        validation_gain = "data/classifycnv/classifycnv_validation_gain.tsv",
+        test_loss = "data/classifycnv/classifycnv_test_loss.tsv",
+        test_gain = "data/classifycnv/classifycnv_test_gain.tsv",
+        test_long_loss = "data/classifycnv/classifycnv_test-long_loss.tsv",
+        test_long_gain = "data/classifycnv/classifycnv_test-long_gain.tsv",
+        test_bothchrom_loss = "data/classifycnv/classifycnv_test-bothchrom_loss.tsv",
+        test_bothchrom_gain = "data/classifycnv/classifycnv_test-bothchrom_gain.tsv",
+
 rule classifycnv:
     """Run ClassifyCNV on Test loss CNVs and Test gain CNVs"""
     input:
