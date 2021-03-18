@@ -7,12 +7,10 @@ Data overview
 # %%
 import matplotlib.pyplot as plt
 import seaborn as sns
-import pickle
 import numpy as np
 import pandas as pd
 from scripts.constants import GAIN_ATTRIBUTES, LOSS_ATTRIBUTES, HUMAN_READABLE
 from matplotlib import rcParams
-from scripts.constants import DPI
 from scripts.ml.prepare_df import prepare_df
 from scipy.stats import pointbiserialr
 from sklearn.manifold import TSNE
@@ -32,11 +30,8 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     X = pd.DataFrame(np.concatenate([train_X, val_X]), columns=attributes)
     X["y"] = ['Pathogenic' if i == 1 else "Benign" for i in np.concatenate([train_Y, val_Y])]
     
-        
-    
     sns.violinplot(x='value', y='variable', hue="y", data=X.melt(id_vars="y"), ax=ax[i],
-                  palette={"Pathogenic": "red", "Benign": "green"}, split=True)
-    
+                   palette={"Pathogenic": "red", "Benign": "green"}, split=True)
     
     ax[i].set_xlabel('log(value)')
     ax[i].set_ylabel('')
@@ -44,7 +39,7 @@ for i, cnv_type in enumerate(['loss', 'gain']):
 
 fig.tight_layout()
     
-plt.savefig(f'plots/data_overview_attribute_distributions.png')
+plt.savefig('plots/data_overview_attribute_distributions.png')
 
 # %% Point Biserial corr coef
 fig, ax = plt.subplots(1, 2, figsize=(25, 12))
@@ -67,14 +62,20 @@ for i, cnv_type in enumerate(['loss', 'gain']):
             pbcc["attribute"].append(a)
             pbcc["value"].append(pointbiserialr(Xp.loc[:, a], Xp.y).correlation)
             
-    
     pbcc = pd.DataFrame(pbcc)
+    pbcc = pbcc.sort_values('value', ascending=True)
     
-    sns.barplot(x="value", y="attribute", data=pbcc, ax=ax[i], color='grey')
-    
+    for k, v in enumerate(pbcc.value.values):
+        ax[i].axhline(k, 0, v, color='grey', lw=3)
+        
+    ax[i].plot(pbcc.value, pbcc.attribute, 'X', markersize=20, color='k')
+        
     ax[i].set_xlabel('Point Biserial Correlation Coefficient')
     ax[i].set_ylabel('')
     ax[i].set_title('copy number ' + cnv_type)
+    
+    ax[i].set_xlim(0, 1)
+    ax[i].xaxis.grid(linestyle='--')
 
 fig.tight_layout()
 

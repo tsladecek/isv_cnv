@@ -6,10 +6,8 @@ Create an Ensemble classifier
 from scripts.ml.predict import predict, ensemble_predict
 import numpy as np
 import pandas as pd
-import xgboost as xgb
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
-from scripts.constants import DPI
 
 rcParams.update({'font.size': 15})
 
@@ -19,15 +17,15 @@ fig, ax = plt.subplots(3, 2, figsize=(26, 24))
 
 for j, cnv_type in enumerate(['loss', 'gain']):
     
-    models  = ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']
+    models = ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']
     
     res = {}
     
     for model in models:
-        if model == 'randomforest':
-            model_path = f'results/robust/models/{model}_{cnv_type}.json.gz'
-        else:
-            model_path = f'results/robust/models/{model}_{cnv_type}.json'
+        # if model == 'randomforest':
+        #     model_path = f'results/robust/models/{model}_{cnv_type}.json.gz'
+        # else:
+        model_path = f'results/robust/models/{model}_{cnv_type}.json'
         data_path = f'data/validation_{cnv_type}.tsv.gz'
             
         yhat, y = predict(model_path, data_path, proba=True)
