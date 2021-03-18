@@ -32,6 +32,7 @@ rule classifycnv_download:
         shell("wget https://github.com/Genotek/ClassifyCNV/archive/v1.1.0.zip")
         shell("unzip v1.1.0.zip")
         shell("rm v1.1.0.zip")
+        shell("ClassifyCNV-1.1.0/update_clingen.sh")  # untested in snakemake. Possible permission error
 
 rule makebeds:
     """Create input files for ClassifyCNV"""
