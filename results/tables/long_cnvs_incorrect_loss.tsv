@@ -1,0 +1,6 @@
+variant_id	cnv_type	clinsig	clinsig_review	gold_stars	chr	start_hg38	end_hg38	multiplicity	length	gencode_genes	protein_coding	pseudogenes	mirna	lncrna	rrna	snrna	morbid_genes	disease_associated_genes	hi_genes	regions_HI	regulatory	regulatory_enhancer	regulatory_open_chromatin_region	regulatory_promoter	regulatory_promoter_flanking_region	regulatory_ctcf_binding_site	regulatory_tf_binding_site	regulatory_curated	ISV_prob	ISV_pred
+RCV000141597	copy number loss	0	no assertion criteria provided	0	9	61053889	67217006	1	6163117	146	11	95	1	26	0	4	0	0	0	0	723	138	125	27	152	226	54	1	0.9957306	1
+RCV000684355	copy number loss	1	no assertion criteria provided	0	X	87539807	97020444	1	9480637	70	9	47	1	5	0	3	0	1	0	0	0	0	0	0	0	0	0	0	0.016532278	0
+RCV000739850	copy number loss	0	no assertion criteria provided	0	18	66565701	77550307	1	10984606	154	25	29	2	83	0	3	4	2	4	0	1874	446	453	80	364	462	64	5	0.9997683	1
+RCV000752355	copy number loss	0	no assertion criteria provided	0	18	59577671	66055200	1	6477529	89	25	24	0	32	0	4	8	4	3	0	1179	332	222	39	253	292	37	4	0.9997826	1
+RCV000225330	copy number loss	0	criteria provided, single submitter	1	22	18750783	25518625	1	6767842	445	110	161	12	91	0	2	19	17	12	8	2697	307	336	210	480	949	389	26	0.9965322	1

@@ -29,4 +29,4 @@ for cnv_type in ['loss', 'gain']:
     df = df[df.ISV_pred != df.clinsig]
     
     # Save
-    # df.to_csv('results/long_cnvs_incorrect_{cnv_type}.tsv', sep='\t', index=False)
+    df.to_csv(f'results/tables/long_cnvs_incorrect_{cnv_type}.tsv', sep='\t', index=False)
