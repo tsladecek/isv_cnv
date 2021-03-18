@@ -29,7 +29,7 @@ def open_model(model_path):
         return model
     
     else:
-        with open('results/ISV_gain.json', 'r') as f:
+        with open(model_path, 'r') as f:
             a = f.readline()
 
         if a.startswith('{"learner"'):
