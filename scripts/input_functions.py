@@ -9,7 +9,7 @@ def gridsearch_paths(wildcards):
     for transform in ["", "_log"]:
         for cnv_type in ["loss", "gain"]:
             for model in ["lda", "qda", "logisticregression", "randomforest", "xgboost"]:
-                if model == "randomforest":
+                if model == "randomforest" and transform == '_log':
                     paths.append(f"results/robust/models{transform}/{model}_{cnv_type}{transform}.json.gz")
                 else:
                     paths.append(f"results/robust/models{transform}/{model}_{cnv_type}{transform}.json")
