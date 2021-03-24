@@ -31,7 +31,8 @@ model_search_space = {
                 'penalty': ['l2'],
                 'solver': ['liblinear', 'lbfgs'],
                 'C': [0.001, 0.01, 0.1, 1, 10],
-                'max_iter': [500]
+                'max_iter': [500],
+                'class_weight': [None, 'balanced']
             },
     ],
     "randomforest": {
