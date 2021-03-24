@@ -2,8 +2,8 @@
 .snakemake/
 ClassifyCNV-1.1.0/
 
-results/robust/models/randomforest*.json
-results/robust/models_log/randomforest*.json
+results/robust/models/randomforest*.json.gz
+results/robust/models_log/randomforest*.json.gz
 results/minmax/models/randomforest*.json
 results/minmax/models_log/randomforest*.json
 
