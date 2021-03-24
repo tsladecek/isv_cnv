@@ -9,6 +9,7 @@ from scripts.ml.predict import predict
 from scripts.ml.prepare_df import prepare_df
 import xgboost as xgb
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import recall_score
 import numpy as np
 from sklearn_json import to_dict, to_json
@@ -100,6 +101,38 @@ print(f'Min: {min(p)}, Max: {max(p)}')
 
 to_json(r, 'results/robust/models_log/randomforest_gain_log.json')
 
+# %% Logistic Regression
+# p = {'penalty': 'l2', 
+#      'solver': 'lbfgs',
+#      'C': 1,
+#      'max_iter': 500,
+#      'class_weight': None,
+#      'random_state': 1618,
+#      'n_jobs': 4}
+
+p = {'penalty': 'l2', 
+     'solver': 'lbfgs',
+     'C': 0.1,
+     'max_iter': 500,
+     'class_weight': 'balanced',
+     'random_state': 1618,
+     'n_jobs': 4}
+
+r = LogisticRegression()
+r.set_params(**p)
+r.fit(train_X, train_Y)
+
+tyh = r.predict(train_X)
+yh = r.predict(val_X)
+p = r.predict_proba(val_X)[:, 1]
+
+print('Train Accuracy: ' + str(np.mean(tyh == train_Y)))
+print('Valid Accuracy: ' + str(np.mean(yh == val_Y)))
+print('Sensitivity   : ' + str(recall_score(val_Y, yh)))
+print('Specificity   : ' + str(recall_score(1 - val_Y, 1 - yh)))
+print(f'Min: {min(p)}, Max: {max(p)}')
+
+to_json(r, 'results/robust/models_log/logisticregression_gain_log.json')
 
 # %%
 ########
@@ -184,3 +217,36 @@ print('Specificity   : ' + str(recall_score(1 - val_Y, 1 - yh)))
 print(f'Min: {min(p)}, Max: {max(p)}')
 
 to_json(r, 'results/robust/models_log/randomforest_loss_log.json')
+
+# %% Logistic Regression
+# p = {'penalty': 'l2',
+#      'solver': 'liblinear',
+#      'C': 10,
+#      'max_iter': 500,
+#      'class_weight': None,
+#      'random_state': 1618,
+#      'n_jobs': 4}
+
+p = {'penalty': 'l2',
+     'solver': 'lbfgs',
+     'C': 10,
+     'max_iter': 500,
+     'class_weight': 'balanced',
+     'random_state': 1618,
+     'n_jobs': 4}
+
+r = LogisticRegression()
+r.set_params(**p)
+r.fit(train_X, train_Y)
+
+tyh = r.predict(train_X)
+yh = r.predict(val_X)
+p = r.predict_proba(val_X)[:, 1]
+
+print('Train Accuracy: ' + str(np.mean(tyh == train_Y)))
+print('Valid Accuracy: ' + str(np.mean(yh == val_Y)))
+print('Sensitivity   : ' + str(recall_score(val_Y, yh)))
+print('Specificity   : ' + str(recall_score(1 - val_Y, 1 - yh)))
+print(f'Min: {min(p)}, Max: {max(p)}')
+
+to_json(r, 'results/robust/models_log/logisticregression_loss_log.json')
