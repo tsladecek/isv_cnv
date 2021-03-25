@@ -136,4 +136,3 @@ dependencies:
   - zstd=1.4.5=h9ceee32_0
   - pip:
     - sklearn-json==0.1.0
-prefix: /home/tomas/miniconda3/envs/ISV
