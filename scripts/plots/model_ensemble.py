@@ -3,16 +3,33 @@
 """
 Create an Ensemble classifier
 """
+# %%
+import sys
+import pathlib
+
+# add root path to sys path. Necessary if we want to keep doing package like imports
+
+filepath_list = str(pathlib.Path(__file__).parent.absolute()).split('/')
+ind = filepath_list.index('scripts')
+
+sys.path.insert(1, '/'.join(filepath_list[:ind]))
+
+# %%
 from scripts.ml.predict import predict, ensemble_predict
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
+from scripts.constants import DPI
 
 rcParams.update({'font.size': 15})
 
 
 # %%
+dataset = snakemake.params.dataset
+scaling = snakemake.wildcards.scaling
+
+
 fig, ax = plt.subplots(3, 2, figsize=(26, 24))
 
 for j, cnv_type in enumerate(['loss', 'gain']):
@@ -22,8 +39,8 @@ for j, cnv_type in enumerate(['loss', 'gain']):
     res = {}
     
     for model in models:
-        model_path = f'results/robust/models/{model}_{cnv_type}.json'
-        data_path = f'data/validation_{cnv_type}.tsv.gz'
+        model_path = f'results/{scaling}/models/{model}_{cnv_type}.json'
+        data_path = f'data/{dataset}_{cnv_type}.tsv.gz'
             
         yhat, y = predict(model_path, data_path, proba=True)
         
@@ -32,7 +49,7 @@ for j, cnv_type in enumerate(['loss', 'gain']):
     res = pd.DataFrame(res)
     res = res.astype({"xgboost": np.float})
     
-    res['ensemble'], res['y'] = ensemble_predict(cnv_type, data_path)
+    res['ensemble'], res['y'] = ensemble_predict(cnv_type, data_path, scaling)
     
     # CREATE DF
     r = {'threshold': [], 'label': [], 'accuracy': [], 'correct': [], 'uncertain': [], 'incorrect': []}
@@ -82,4 +99,6 @@ ax[1, 0].set_ylabel('Threshold: 95%', rotation=0, labelpad=70)
 ax[2, 0].set_ylabel('Threshold: 99%', rotation=0, labelpad=70)
 fig.tight_layout()
 
-plt.savefig('plots/results_bars_with_ensemble.png')
+
+plt.savefig(snakemake.output[0], dpi=DPI)
+# plt.savefig('plots/results_bars_with_ensemble.png')

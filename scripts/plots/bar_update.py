@@ -10,11 +10,6 @@ import matplotlib.pyplot as plt
 
 
 # %%
-# results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
-# model_path = 'results/models/xgboost_gain.json'
-# data_path = 'data/validation_gain.tsv.gz'
-# threshold = 0.95
-# custom_label = None
 
 def bar_update_results(results, model_path, data_path, threshold=0.5, train_data_path=None, custom_label=None, robust=True):
 
@@ -118,20 +113,3 @@ def bar_update_results_acmg(results, filepath, likely_is_uncertain=True, return_
     results['incorrect'].append(i)
     
     return results
-    
-    
-# %%
-# results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
-# m = 'randomforest'
-
-# for lt in ['', '_log']:
-#     for t in [0.5, 0.9, 0.95, 0.99]:
-#         results = bar_update_results(results, f'results/models{lt}/{m}_gain{lt}.json.gz', f'data/validation_gain.tsv.gz', t)
-
-# fig, ax = plt.subplots(1, 1, figsize = (12, 7))
-
-# res = pd.DataFrame(results)
-# res.iloc[::-1].set_index('label').plot(kind='barh', stacked=True, ax=ax, width=0.8,
-#                                         color=["#009900", "#C0C0C0", "#FF0000"])
-
-

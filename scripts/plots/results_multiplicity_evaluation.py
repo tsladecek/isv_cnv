@@ -5,22 +5,32 @@ Created on Thu Mar 18 10:53:52 2021
 
 @author: tomas
 """
+# %%
+import sys
+import pathlib
 
+# add root path to sys path. Necessary if we want to keep doing package like imports
+
+filepath_list = str(pathlib.Path(__file__).parent.absolute()).split('/')
+ind = filepath_list.index('scripts')
+
+sys.path.insert(1, '/'.join(filepath_list[:ind]))
 # %%
 from scripts.ml.predict import predict
 from scripts.constants import modelfmt
 import pandas as pd
 import matplotlib.pyplot as plt
+from scripts.constants import DPI
 
 THRESHOLD = 0.95
 
 # %%
-fig, ax = plt.subplots(2, 1, figsize=(12, 10))
+fig, ax = plt.subplots(2, 1, figsize=(12, 7))
 
 for k, cnv_type in enumerate(['loss', 'gain']):
     r = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
     
-    for d in ['validation', 'test', 'test-bothchrom']:
+    for d in ['test', 'test-bothchrom']:
         yh, y = predict(modelfmt.format(cnv_type), f'data/{d}_{cnv_type}.tsv.gz',
                         f'data/train_{cnv_type}.tsv.gz', proba=True)
         
@@ -57,4 +67,5 @@ for k, cnv_type in enumerate(['loss', 'gain']):
 
 fig.tight_layout()
 
-plt.savefig('plots/results_multiplicity.png')
+plt.savefig(snakemake.output.multiplicity, dpi=DPI)
+# plt.savefig('plots/results_multiplicity.png')

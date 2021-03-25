@@ -3,6 +3,16 @@
 """
 Distribution of probabilities for Normal, Likely and Uncertain CNVs 
 """
+# %%
+import sys
+import pathlib
+
+# add root path to sys path. Necessary if we want to keep doing package like imports
+
+filepath_list = str(pathlib.Path(__file__).parent.absolute()).split('/')
+ind = filepath_list.index('scripts')
+
+sys.path.insert(1, '/'.join(filepath_list[:ind]))
 
 # %%
 from scripts.ml.predict import predict
@@ -12,6 +22,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import rcParams
 from scripts.constants import modelfmt
+from scripts.constants import DPI
 
 
 rcParams.update({'font.size': 12})
@@ -72,5 +83,6 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     ax[i].set_yticks(np.linspace(0, 1, 6))
     
 fig.tight_layout()
-    
-plt.savefig(f'plots/results_violins.png')
+  
+plt.savefig(snakemake.output.violins, dpi=DPI)  
+# plt.savefig(f'plots/results_violins.png')
