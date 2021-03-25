@@ -88,16 +88,13 @@ def predict(model_path, datapath, train_data_path=None, proba=False, robust=True
     return yhat, y
 
 # %% Ensemble Predict
-def ensemble_train(cnv_type):
+def ensemble_train(cnv_type, output_path):
     models  = ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']
     
     res = {}
     
     for model in models:
-        if model == 'randomforest':
-            model_path = f'results/robust/models/{model}_{cnv_type}.json.gz'
-        else:
-            model_path = f'results/robust/models/{model}_{cnv_type}.json'
+        model_path = f'results/robust/models/{model}_{cnv_type}.json'
         data_path = f'data/train_{cnv_type}.tsv.gz'
         
         yhat, y = predict(model_path, data_path, proba=True)
@@ -112,14 +109,11 @@ def ensemble_train(cnv_type):
     
     x = xgb.train({"max_depth": 2, 'seed': 1618}, dmat, num_boost_round=30)
     
-    x.save_model(f'results/robust/ensemble_xgb_{cnv_type}.json')
+    x.save_model(output_path)
     
-# %%
-# for c in ['loss', 'gain']:
-#     ensemble_train(c)
 
 # %%
-def ensemble_predict(cnv_type, data_path):
+def ensemble_predict(cnv_type, data_path, scaling='robust'):
     
     # Prepare data
     models  = ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']
@@ -127,10 +121,8 @@ def ensemble_predict(cnv_type, data_path):
     res = {}
     
     for model in models:
-        if model == 'randomforest':
-            model_path = f'results/robust/models/{model}_{cnv_type}.json.gz'
-        else:
-            model_path = f'results/robust/models/{model}_{cnv_type}.json'
+        model_path = f'results/{scaling}/models/{model}_{cnv_type}.json.gz'
+        model_path = f'results/{scaling}/models/{model}_{cnv_type}.json'
         
         yhat, y = predict(model_path, data_path, proba=True)
         
@@ -143,7 +135,7 @@ def ensemble_predict(cnv_type, data_path):
     
     # load model
     x = xgb.Booster()
-    x.load_model(f'results/robust/ensemble_xgb_{cnv_type}.json')
+    x.load_model(f'results/{scaling}/ensemble_xgb_{cnv_type}.json')
     
     # predict
     return x.predict(dmat), y
