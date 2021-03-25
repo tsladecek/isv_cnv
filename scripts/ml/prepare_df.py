@@ -61,7 +61,8 @@ def prepare(cnv_type,
             train_data_path,
             data_path,
             logtransform=False,
-            robustscaler=True):
+            robustscaler=True,
+            return_train=False):
     """
     Extract relevant attributes for training and return training dataset
     together with labels, and scale the dataset - do same for validation dataset
@@ -99,8 +100,11 @@ def prepare(cnv_type,
     else:
         scaler = MinMaxScaler()
     
-    X_train = scaler.fit(X_train)
+    X_train = scaler.fit_transform(X_train)
     
     X_any = scaler.transform(X_any)
+    
+    if return_train:
+        return X_train, Y_train, X_any, Y_any
     
     return X_any, Y_any
