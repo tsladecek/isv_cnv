@@ -4,6 +4,16 @@
 Tree methods remodellings + Logistic Regression
 """
 # %%
+import sys
+import pathlib
+
+# add root path to sys path. Necessary if we want to keep doing package like imports
+
+filepath_list = str(pathlib.Path(__file__).parent.absolute()).split('/')
+ind = filepath_list.index('scripts')
+
+sys.path.insert(1, '/'.join(filepath_list[:ind]))
+# %%
 from scripts.ml.gridsearch import gridsearch
 from scripts.ml.predict import predict
 from scripts.ml.prepare_df import prepare_df
