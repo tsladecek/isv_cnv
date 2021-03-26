@@ -15,7 +15,6 @@ results/old
 *ipynb_checkpoints*
 
 data/shap_data/
-data/classifycnv/*.bed
 
 scripts/plots/shap_plots.ipynb
 
