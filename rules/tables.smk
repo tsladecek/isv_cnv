@@ -2,7 +2,9 @@ rule all_tables:
     input:
         "results/tables/metrics.tsv",
         "results/tables/long_cnvs_incorrect_loss.tsv",
-        "results/tables/long_cnvs_incorrect_gain.tsv"
+        "results/tables/long_cnvs_incorrect_gain.tsv",
+        "results/tables/incorrect_test_loss.tsv",
+        "results/tables/incorrect_test_gain.tsv",
 rule metric_table:
     input:
         "results/ISV_gain.json",
@@ -31,3 +33,15 @@ rule long_cnvs:
         "results/tables/long_cnvs_incorrect_{cnv_type}.tsv"
     script:
         "../scripts/results/long_cnvs.py"
+
+rule stars:
+    input:
+        model       = "results/ISV_{cnv_type}.json", 
+        train       = "data/train_{cnv_type}.tsv.gz",
+        test        = "data/{dataset}_{cnv_type}.tsv.gz",
+        classifycnv = "data/classifycnv/classifycnv_{dataset}_{cnv_type}.tsv"
+    output:
+        wrong = "results/tables/incorrect_{dataset}_{cnv_type}.tsv"
+    script:
+        "../scripts/results/stars.py"
+        
