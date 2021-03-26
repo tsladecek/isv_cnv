@@ -2,6 +2,8 @@ import pandas as pd
 
 rule all_classifycnv:
     input:
+        train_loss = "data/classifycnv/classifycnv_train_loss.tsv",
+        train_gain = "data/classifycnv/classifycnv_train_gain.tsv",
         validation_loss = "data/classifycnv/classifycnv_validation_loss.tsv",
         validation_gain = "data/classifycnv/classifycnv_validation_gain.tsv",
         test_loss = "data/classifycnv/classifycnv_test_loss.tsv",
