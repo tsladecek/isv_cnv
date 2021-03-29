@@ -1,6 +1,7 @@
 *__pycache__*
 .snakemake/
 ClassifyCNV-1.1.0/
+AnnotSV-3.0.7/
 
 results/robust/models/randomforest*.json.gz
 results/robust/models_log/randomforest*.json.gz
