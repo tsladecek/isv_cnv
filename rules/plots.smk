@@ -1,5 +1,6 @@
 include: "../scripts/input_functions.py"
 include: "classifycnv.smk"
+include: "annotsv.smk"
 configfile: "config.yaml"
 
 
@@ -82,6 +83,8 @@ rule isv_acmg_comparison:
     input:
         classifycnv_loss = "data/classifycnv/classifycnv_{dataset}_loss.tsv",
         classifycnv_gain = "data/classifycnv/classifycnv_{dataset}_gain.tsv",
+        annotsv_loss = "data/annotsv/annotsv_{dataset}_loss.tsv",
+        annotsv_gain = "data/annotsv/annotsv_{dataset}_gain.tsv",
         isv_loss = "results/ISV_loss.json",
         isv_gain = "results/ISV_gain.json",
         data_loss = "data/{dataset}_loss.tsv.gz",

@@ -47,7 +47,24 @@ def bar_update_results(results, model_path, data_path, threshold=0.5, train_data
     results['incorrect'].append(i)
     
     return results
+
+
+# %%
+def acmg_severity(score):
+    """https://www.nature.com/articles/s41436-019-0686-8"""
     
+    if score >= 0.99:
+        return 'Pathogenic'
+    elif score >= 0.9:
+        return 'Likely pathogenic'
+    elif score >= -0.89:
+        return 'Uncertain significance'
+    elif score > -0.99:
+        return 'Likely benign'
+    else:
+        return 'Benign'
+
+
 # %%
 def bar_update_results_acmg(results, filepath, likely_is_uncertain=True, return_dataframes=False):
     acmg = pd.read_csv(filepath, sep='\t')
@@ -81,6 +98,18 @@ def bar_update_results_acmg(results, filepath, likely_is_uncertain=True, return_
         
         severity = acmg.Classification
     
+    elif clf == 'annotsv':
+        inds = np.empty(len(df))
+        for i in range(len(df)):
+            c, s, e = df.iloc[i].loc[['chr', 'start_hg38', 'end_hg38']]
+            inds[i] = np.where((acmg.SV_chrom == c) & (acmg.SV_start == s) & (acmg.SV_end == e))[0][0]
+        
+        acmg = acmg.iloc[inds]
+        acmg = acmg.reset_index(drop=True)
+        
+        acmg['severity'] = [acmg_severity(i) for i in acmg.AnnotSV_ranking_score]
+        severity = acmg.severity
+        
     if likely_is_uncertain:
         severity = severity.replace({'Likely pathogenic': 'Uncertain significance',
                                      'Likely benign': 'Uncertain significance'})

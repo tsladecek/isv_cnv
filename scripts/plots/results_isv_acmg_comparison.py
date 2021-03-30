@@ -27,6 +27,7 @@ rcParams.update({'font.size': 12})
 
 # %%
 dataset = snakemake.wildcards.dataset    
+# dataset = 'validation'
 
 fig, ax = plt.subplots(2, 1, figsize=(12, 7))
 
@@ -35,7 +36,10 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     
     # ClassifyCNV
     results = bar_update_results_acmg(results, f'data/classifycnv/classifycnv_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
-
+    
+    # AnnotSV
+    results = bar_update_results_acmg(results, f'data/annotsv/annotsv_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
+    
     # MarCNV
     # results = bar_update_results_acmg(results, f'data/marcnv/MarCNV_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
     
