@@ -29,7 +29,7 @@ rcParams.update({'font.size': 15})
 tsnedict = {}
 
 for cnv_type in ['loss', 'gain']:
-    train_X, train_Y, val_X, val_Y = prepare_df(cnv_type, logtransform=True)
+    train_X, train_Y, val_X, val_Y = prepare_df(cnv_type, logtransform=False)
     X = np.concatenate([train_X, val_X])
     Y = np.concatenate([train_Y, val_Y])
     
