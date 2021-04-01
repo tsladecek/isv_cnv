@@ -33,7 +33,7 @@ cnv_type = snakemake.wildcards.cnv_type
 # load data
 attributes = [LOSS_ATTRIBUTES, GAIN_ATTRIBUTES][(cnv_type == 'gain') * 1]
 
-train_X, train_Y, data_X, data_Y = prepare(cnv_type, snakemake.input.train, snakemake.input.dataset)
+train_X, train_Y, data_X, data_Y = prepare(cnv_type, snakemake.input.train, snakemake.input.dataset, return_train=True)
 
 # open model
 model = open_model(snakemake.input.model)

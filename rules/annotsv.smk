@@ -11,29 +11,29 @@ rule all_annotsv:
         "data/annotsv/annotsv_test-long_gain.tsv",
         "data/annotsv/annotsv_test-bothchrom_gain.tsv",
 
-rule download_annotsv:
-    output:
-        "AnnotSV-3.0.7/"
-    run:
-        shell("wget https://github.com/lgmgeo/AnnotSV/archive/refs/tags/v3.0.7.zip")
-        shell("unzip v3.0.7.zip")
-        shell("rm v3.0.7.zip")
-        # RUN THESE COMMANDS LOCALLY !!!
-        # cd AnnotSV-3.0.7
-        # make PREFIX=. install
-        # make PREFIX=. install-human-annotation
-        # make PREFIX=. install-mouse-annotation
-        # export ANNOTSV=$(pwd)
-
-
-rule raw_annotsv_annotations:
-    input:
-        annotsv = "AnnotSV-3.0.7/",
-        bed = "data/classifycnv/{dataset}_{cnv_type}.bed"
-    output:
-        raw_annotsv = temp("data/annotsv/raw_{dataset}_{cnv_type}.tsv")
-    shell:
-        "AnnotSV-3.0.7/bin/AnnotSV -SVinputFile {input.bed} -outputFile {output.raw_annotsv} -svtBEDcol 4 -genomeBuild GRCh38"
+# rule download_annotsv:
+#     output:
+#         "AnnotSV-3.0.7/"
+#     run:
+#         shell("wget https://github.com/lgmgeo/AnnotSV/archive/refs/tags/v3.0.7.zip")
+#         shell("unzip v3.0.7.zip")
+#         shell("rm v3.0.7.zip")
+#         # RUN THESE COMMANDS LOCALLY !!!
+#         # cd AnnotSV-3.0.7
+#         # make PREFIX=. install
+#         # make PREFIX=. install-human-annotation
+#         # make PREFIX=. install-mouse-annotation
+#         # export ANNOTSV=$(pwd)
+# 
+# 
+# rule raw_annotsv_annotations:
+#     input:
+#         annotsv = "AnnotSV-3.0.7/",
+#         bed = "data/classifycnv/{dataset}_{cnv_type}.bed"
+#     output:
+#         raw_annotsv = temp("data/annotsv/raw_{dataset}_{cnv_type}.tsv")
+#     shell:
+#         "AnnotSV-3.0.7/bin/AnnotSV -SVinputFile {input.bed} -outputFile {output.raw_annotsv} -svtBEDcol 4 -genomeBuild GRCh38"
 
 rule clean_annotsv_file:
     input:

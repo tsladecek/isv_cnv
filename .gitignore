@@ -13,6 +13,7 @@ results/minmax/models_log/randomforest*.json
 !plots/README.md
 
 results/old
+plots/old
 *ipynb_checkpoints*
 
 data/shap_data/
