@@ -25,6 +25,7 @@ rcParams.update({'font.size': 15})
 
 # %%
 dataset = snakemake.params.dataset
+scaling = snakemake.wildcards.scaling
 
 fig, ax = plt.subplots(3, 2, figsize=(20, 16))
 
@@ -33,7 +34,9 @@ for i, threshold in enumerate([0.5, 0.95, 0.99]):
         results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
             
         for model in ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']:
-            results = bar_update_results(results, f'results/robust/models/{model}_{cnv_type}.json', f'data/{dataset}_{cnv_type}.tsv.gz', threshold)
+            results = bar_update_results(results, f'results/{scaling}/models/{model}_{cnv_type}.json',
+                                         f'data/{dataset}_{cnv_type}.tsv.gz', threshold,
+                                         robust=(scaling == 'robust'))
         
         res = pd.DataFrame(results)
         res.iloc[::-1].set_index('label').plot(kind='barh', stacked=True, ax=ax[i, j], width=0.8,
@@ -67,7 +70,9 @@ for i, threshold in enumerate([0.5, 0.95, 0.99]):
         results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
             
         for model in models:
-            results = bar_update_results(results, f'results/robust/models_log/{model}_{cnv_type}_log.json', f'data/{dataset}_{cnv_type}.tsv.gz', threshold)
+            results = bar_update_results(results, f'results/{scaling}/models_log/{model}_{cnv_type}_log.json',
+                                         f'data/{dataset}_{cnv_type}.tsv.gz', threshold,
+                                         robust=(scaling == 'robust'))
         
         res = pd.DataFrame(results)
         res.iloc[::-1].set_index('label').plot(kind='barh', stacked=True, ax=ax[i, j], width=0.8,

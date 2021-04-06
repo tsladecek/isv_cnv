@@ -6,8 +6,10 @@ configfile: "config.yaml"
 
 rule all_plots:
     input:
-        bars               = "plots/bars_models" + config["FIG_FORMAT"],
-        bars_log           = "plots/bars_models_logtransformed" + config["FIG_FORMAT"],
+        bars               = "plots/bars_models_robust" + config["FIG_FORMAT"],
+        bars_log           = "plots/bars_models_logtransformed_robust" + config["FIG_FORMAT"],
+        bars_minmax        = "plots/bars_models_minmax" + config["FIG_FORMAT"],
+        bars_log_minmax    = "plots/bars_models_logtransformed_minmax" + config["FIG_FORMAT"],
         ensemble_bars      = "plots/bars_ensemble_robust" + config["FIG_FORMAT"],
         distributions      = "plots/data_overview_distributions" + config["FIG_FORMAT"],
         pbcc               = "plots/data_overview_pbcc" + config["FIG_FORMAT"],
@@ -27,8 +29,8 @@ rule bars:
     params:
         dataset = "validation"
     output:
-        bars    = "plots/bars_models" + config["FIG_FORMAT"],
-        bars_log = "plots/bars_models_logtransformed" + config["FIG_FORMAT"]
+        bars    = "plots/bars_models_{scaling}" + config["FIG_FORMAT"],
+        bars_log = "plots/bars_models_logtransformed_{scaling}" + config["FIG_FORMAT"]
     script:
         "../scripts/plots/bars.py"
 
