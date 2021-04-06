@@ -5,8 +5,8 @@ AnnotSV-3.0.7/
 
 results/robust/models/randomforest*.json.gz
 results/robust/models_log/randomforest*.json.gz
-results/minmax/models/randomforest*.json
-results/minmax/models_log/randomforest*.json
+results/minmax/models/randomforest*.json.gz
+results/minmax/models_log/randomforest*.json.gz
 
 !results/README.md
 
