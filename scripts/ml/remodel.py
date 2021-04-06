@@ -14,17 +14,10 @@ ind = filepath_list.index('scripts')
 
 sys.path.insert(1, '/'.join(filepath_list[:ind]))
 # %%
-from scripts.ml.gridsearch import gridsearch
-from scripts.ml.predict import predict
 from scripts.ml.prepare_df import prepare_df
 import xgboost as xgb
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import recall_score, confusion_matrix
 import numpy as np
-from sklearn_json import to_dict, to_json
-import gzip
-import json
+from sklearn.metrics import confusion_matrix
 
 # %%
 ########
@@ -41,8 +34,8 @@ val_dmat = xgb.DMatrix(val_X, val_Y)
 # p = {'max_depth': 8,
 #      'eta': 0.01,
 #      'gamma': 1,
-#      'subsample': 0.8,
-#      'lambda': 1,
+#      'subsample': 1,
+#      'lambda': 0.1,
 #      'colsample_bytree': 0.8,
 #      'scale_pos_weight': np.sqrt(sum(train_Y == 0) / sum(train_Y == 1)),
 #      'seed': 1618,
@@ -52,8 +45,8 @@ val_dmat = xgb.DMatrix(val_X, val_Y)
 p = {'max_depth': 8,
      'eta': 0.3,
      'gamma': 1,
-     'subsample': 0.8,
-     'lambda': 1,
+     'subsample': 1,
+     'lambda': 0.1,
      'colsample_bytree': 0.8,
      'scale_pos_weight': np.sqrt(sum(train_Y == 0) / sum(train_Y == 1)),
      'seed': 1618,
