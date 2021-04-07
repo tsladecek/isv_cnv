@@ -21,7 +21,9 @@ If attempting to recompute entire workflow, run:
 1. Create conda environment
 
 ```
-conda env create --file environment.yml
+conda env create --file environment.yml 
+
+conda activate ISV
 ```
 
 2. Train models and generate all plots and tables
