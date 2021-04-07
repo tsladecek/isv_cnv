@@ -5,6 +5,8 @@ rule all_tables:
         "results/tables/long_cnvs_incorrect_gain.tsv",
         "results/tables/incorrect_test_loss.tsv",
         "results/tables/incorrect_test_gain.tsv",
+        "results/tables/attribute_descriptions.tsv",
+
 rule metric_table:
     input:
         "results/ISV_gain.json",
@@ -44,4 +46,16 @@ rule stars:
         wrong = "results/tables/incorrect_{dataset}_{cnv_type}.tsv"
     script:
         "../scripts/results/stars.py"
-        
+
+rule attribute_descriptions:
+    input:
+        "data/train_loss.tsv.gz",
+        "data/validation_loss.tsv.gz",
+        "data/test_loss.tsv.gz",
+        "data/train_gain.tsv.gz",
+        "data/validation_gain.tsv.gz",
+        "data/test_gain.tsv.gz",
+    output:
+        "results/tables/attribute_descriptions.tsv"
+    script:
+        "../scripts/results/attribute_overview.py"
