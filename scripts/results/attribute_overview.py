@@ -31,8 +31,8 @@ for cnv_type in ['loss', 'gain']:
     train = pd.read_csv(f'data/train_{cnv_type}.tsv.gz', sep='\t', compression='gzip')
     validation = pd.read_csv(f'data/validation_{cnv_type}.tsv.gz', sep='\t', compression='gzip')
     test = pd.read_csv(f'data/test_{cnv_type}.tsv.gz', sep='\t', compression='gzip')
-    
-    
+
+
     df = pd.concat([train, validation, test])
     
     res = {

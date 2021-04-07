@@ -20,7 +20,9 @@ rule all_plots:
         multiplicity       = "plots/bars_multiplicity" + config["FIG_FORMAT"],
         shap_swarm_loss    = "plots/shap_swarm_validation_loss" + config["FIG_FORMAT"],
         shap_swarm_gain    = "plots/shap_swarm_validation_gain" + config["FIG_FORMAT"],
-        violins            = "plots/isv_violins" + config["FIG_FORMAT"]
+        violins            = "plots/isv_violins" + config["FIG_FORMAT"],
+        corrplot_loss      = "plots/data_overview_correlations_loss" + config["FIG_FORMAT"],
+        corrplot_gain      = "plots/data_overview_correlations_gain" + config["FIG_FORMAT"],
 
 
 rule bars:
@@ -142,3 +144,13 @@ rule violins:
         "../scripts/plots/results_violins.py"
 
 
+rule correlation_plots:
+    input:
+        train = "data/train_{cnv_type}.tsv.gz",
+        validation = "data/validation_{cnv_type}.tsv.gz",
+        test = "data/test_{cnv_type}.tsv.gz",
+    output:
+        corrplot = "plots/data_overview_correlations_{cnv_type}" + config["FIG_FORMAT"]
+    script:
+        "../scripts/plots/results_inter-attribute_correlations.py"
+        
