@@ -24,23 +24,20 @@ If attempting to recompute entire workflow, run:
 conda env create --file environment.yml
 ```
 
-2. Train models
+2. Train models and generate all plots and tables
 
 ```
-snakemake --cores <number of cores> -s rules/gridsearch.smk
+snakemake --cores <number of cores>
 ```
 
-3. Remodel Tree based models and logistic regression
+---
+### p.s.
+We decided to retrain the xgboost model by changing the learning rate to `0.3` of the best searched model.
+This ensured that the predicted probabilities were close to 0 for benign and close to 1 for pathogenic CNVs.
+
+Run (to ensure that the models are exactly the same):
 
 ```
 python scripts/ml/remodel.py
-python scripts/ml/remodel_log.py
-```
-
-4. Generate all figures and tables
-
-```
-snakemake --cores <number of cores> -s rules/plots.smk
-snakemake --cores <number of cores> -s rules/tables.smk
 ```
 

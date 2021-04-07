@@ -1,12 +1,7 @@
 name: ISV
 channels:
-  - moustik
-  - rsmulktis
-  - agbiome
-  - conda-forge
-  - g2554711/label/bioconda
-  - g2554711
   - bioconda
+  - conda-forge
   - defaults
 dependencies:
   - _libgcc_mutex=0.1=main
