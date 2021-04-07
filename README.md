@@ -29,15 +29,5 @@ conda env create --file environment.yml
 ```
 snakemake --cores <number of cores>
 ```
-
 ---
-### p.s.
-We decided to retrain the xgboost model by changing the learning rate to `0.3` of the best searched model.
-This ensured that the predicted probabilities were close to 0 for benign and close to 1 for pathogenic CNVs.
-
-Run (to ensure that the models are exactly the same):
-
-```
-python scripts/ml/remodel.py
-```
 

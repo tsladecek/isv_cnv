@@ -12,6 +12,9 @@ def gridsearch_paths(wildcards):
                 paths.append(f"results/robust/models{transform}/{model}_{cnv_type}{transform}.json")
                 paths.append(f"results/robust/gridsearch_results{transform}/{model}_{cnv_type}{transform}.tsv")
     
+    paths.append("results/ISV_gain.json")
+    paths.append("results/ISV_loss.json")
+
     return paths
 
 def gridsearch_paths_minmax(wildcards):

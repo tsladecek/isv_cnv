@@ -38,3 +38,17 @@ rule model_gridsearch_logtransform:
                    params=model_search_space[wildcards.model],
                    modelpath=output.modelpath, resultspath=output.results,
                    n_jobs=threads)
+
+
+rule ISV_models:
+    input:
+        "results/robust/models/xgboost_gain.json",
+        "results/robust/models/xgboost_loss.json",
+        "results/robust/models_log/xgboost_gain_log.json",
+    output:
+        "results/ISV_loss.json",
+        "results/ISV_gain.json"
+    run:
+        shell("python scripts/ml/remodel.py")
+        shell("cp results/robust/models/xgboost_gain.json results/ISV_gain.json")
+        shell("cp results/robust/models/xgboost_loss.json results/ISV_loss.json")

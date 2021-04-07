@@ -54,6 +54,7 @@ rule ensemble_train:
         lor = "results/{scaling}/models/logisticregression_{cnv_type}.json",
         rfe = "results/{scaling}/models/randomforest_{cnv_type}.json",
         xgb = "results/{scaling}/models/xgboost_{cnv_type}.json",
+        isv = "results/ISV_{cnv_type}.json"
     output: 
         ensemble = "results/{scaling}/ensemble_xgb_{cnv_type}.json"
     run:
@@ -104,6 +105,8 @@ rule multiplicity:
         test_bothchrom_loss = "data/test-bothchrom_loss.tsv.gz",
         test_gain = "data/test_gain.tsv.gz",
         test_bothchrom_gain = "data/test-bothchrom_gain.tsv.gz",
+        isv_loss = "results/ISV_loss.json",
+        isv_gain = "results/ISV_gain.json",
     output:
         multiplicity = "plots/bars_multiplicity" + config["FIG_FORMAT"]
     script:
@@ -137,7 +140,7 @@ rule violins:
         "data/likely_gain.tsv.gz",
         "data/uncertain_gain.tsv.gz",
         "results/ISV_loss.json",
-        "results/ISV_gain.json"
+        "results/ISV_gain.json",
     output:
         violins = "plots/isv_violins" + config["FIG_FORMAT"]
     script:
