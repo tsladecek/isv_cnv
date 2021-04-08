@@ -23,6 +23,11 @@ rule all_plots:
         violins            = "plots/isv_violins" + config["FIG_FORMAT"],
         corrplot_loss      = "plots/data_overview_correlations_loss" + config["FIG_FORMAT"],
         corrplot_gain      = "plots/data_overview_correlations_gain" + config["FIG_FORMAT"],
+        digeorge           = "plots/syndroms_shap/digeorge.svg",#  + config["FIG_FORMAT"],
+        willi_angelman     = "plots/syndroms_shap/willi_angelman.svg",#  + config["FIG_FORMAT"],
+        criduchat          = "plots/syndroms_shap/cri_du_chat.svg",#  + config["FIG_FORMAT"],
+        microdel_1p36      = "plots/syndroms_shap/microdel_1p36.svg",#  + config["FIG_FORMAT"],
+        wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn.svg",#  + config["FIG_FORMAT"], 
 
 
 rule bars:
@@ -157,3 +162,19 @@ rule correlation_plots:
     script:
         "../scripts/plots/results_inter-attribute_correlations.py"
         
+
+rule five_syndroms:
+    input:
+        data  = "data/evaluation_data/five_syndroms.tsv.gz",
+        train = "data/train_loss.tsv.gz",
+        model = "results/ISV_loss.json",
+    params:
+        cnv_type = "loss"
+    output:
+        "plots/syndroms_shap/digeorge.svg",#  + config["FIG_FORMAT"],
+        "plots/syndroms_shap/willi_angelman.svg",#  + config["FIG_FORMAT"],
+        "plots/syndroms_shap/cri_du_chat.svg",#  + config["FIG_FORMAT"],
+        "plots/syndroms_shap/microdel_1p36.svg",#  + config["FIG_FORMAT"],
+        "plots/syndroms_shap/wolf_hirschhorn.svg",#  + config["FIG_FORMAT"], 
+    script:
+        "../scripts/plots/results_five_syndroms_waterfalls.py"
