@@ -10,25 +10,20 @@ import matplotlib.pyplot as plt
 
 
 # %%
-# results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
-# model_path = 'results/models/xgboost_gain.json'
-# data_path = 'data/validation_gain.tsv.gz'
-# threshold = 0.95
-# custom_label = None
 
-def bar_update_results(results, model_path, data_path, threshold, custom_label=None, robust=True):
+def bar_update_results(results, model_path, data_path, threshold=0.5, train_data_path=None, custom_label=None, robust=True):
 
     model = model_path.split('/')[-1].split('_')[0]
     cnv_type = model_path.split('/')[-1].split('_')[1]
     
     
     if threshold == 0.5:
-        yhat, y = predict(model_path, data_path, robust=robust)
+        yhat, y = predict(model_path, data_path, robust=robust, train_data_path=train_data_path)
         
         u = 0
     
     else:
-        yhat, y = predict(model_path, data_path, proba=True, robust=robust)
+        yhat, y = predict(model_path, data_path, proba=True, robust=robust, train_data_path=train_data_path)
         t = (yhat >= threshold) + (yhat <= (1 - threshold))
         yhat, y = yhat[t], y[t]
         yhat = (yhat > 0.5) * 1
@@ -52,19 +47,98 @@ def bar_update_results(results, model_path, data_path, threshold, custom_label=N
     results['incorrect'].append(i)
     
     return results
-    
+
+
 # %%
-# results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
-# m = 'randomforest'
+def acmg_severity(score):
+    """https://www.nature.com/articles/s41436-019-0686-8"""
+    
+    if score >= 0.99:
+        return 'Pathogenic'
+    elif score >= 0.9:
+        return 'Likely pathogenic'
+    elif score >= -0.89:
+        return 'Uncertain significance'
+    elif score > -0.99:
+        return 'Likely benign'
+    else:
+        return 'Benign'
 
-# for lt in ['', '_log']:
-#     for t in [0.5, 0.9, 0.95, 0.99]:
-#         results = bar_update_results(results, f'results/models{lt}/{m}_gain{lt}.json.gz', f'data/validation_gain.tsv.gz', t)
 
-# fig, ax = plt.subplots(1, 1, figsize = (12, 7))
-
-# res = pd.DataFrame(results)
-# res.iloc[::-1].set_index('label').plot(kind='barh', stacked=True, ax=ax, width=0.8,
-#                                         color=["#009900", "#C0C0C0", "#FF0000"])
-
-
+# %%
+def bar_update_results_acmg(results, filepath, likely_is_uncertain=True, return_dataframes=False):
+    acmg = pd.read_csv(filepath, sep='\t')
+    
+    clf, dataset, cnv_type = filepath.split('.')[0].split('/')[-1].split('_')
+    
+    df = pd.read_csv(f'data/{dataset}_{cnv_type}.tsv.gz', compression='gzip', sep='\t')
+    
+    # Reorder and add real label to the acmg dataset
+    if clf == 'MarCNV':
+    
+        inds = np.empty(len(df))
+        for i in range(len(df)):
+            c, s, e = df.iloc[i].loc[['chr', 'start_hg38', 'end_hg38']]
+            inds[i] = np.where((acmg.chr == c) & (acmg.start == s) & (acmg.end == e))[0][0]
+        
+        acmg = acmg.iloc[inds]
+        acmg = acmg.reset_index(drop=True)
+    
+        severity = acmg.severity
+        severity = severity.replace({'Uncertain': 'Uncertain significance'})
+    
+    elif clf == 'classifycnv':
+        inds = np.empty(len(df))
+        for i in range(len(df)):
+            c, s, e = df.iloc[i].loc[['chr', 'start_hg38', 'end_hg38']]
+            inds[i] = np.where((acmg.Chromosome == 'chr' + c) & (acmg.Start == s) & (acmg.End == e))[0][0]
+        
+        acmg = acmg.iloc[inds]
+        acmg = acmg.reset_index(drop=True)
+        
+        severity = acmg.Classification
+    
+    elif clf == 'annotsv':
+        inds = np.empty(len(df))
+        for i in range(len(df)):
+            c, s, e = df.iloc[i].loc[['chr', 'start_hg38', 'end_hg38']]
+            inds[i] = np.where((acmg.SV_chrom == c) & (acmg.SV_start == s) & (acmg.SV_end == e))[0][0]
+        
+        acmg = acmg.iloc[inds]
+        acmg = acmg.reset_index(drop=True)
+        
+        acmg['severity'] = [acmg_severity(i) for i in acmg.AnnotSV_ranking_score]
+        severity = acmg.severity
+        
+    if likely_is_uncertain:
+        severity = severity.replace({'Likely pathogenic': 'Uncertain significance',
+                                     'Likely benign': 'Uncertain significance'})
+    else:
+        severity = severity.replace({'Likely pathogenic': 'Pathogenic',
+                                     'Likely benign': 'Benign'})
+    
+    if return_dataframes:
+        return df, acmg
+    
+    acmg_df = pd.DataFrame({'severity': severity, 'clinsig': df.clinsig})
+    acmg_df = acmg_df.query('severity != "Uncertain significance"')
+    acmg_df = acmg_df.replace({'Pathogenic': 1, 'Benign': 0})
+    
+    # uncertain
+    u = np.sum(severity == 'Uncertain significance')
+    
+    # correct
+    c = np.sum(acmg_df.severity == acmg_df.clinsig)
+    
+    # incorrect
+    i = np.sum(acmg_df.severity != acmg_df.clinsig)
+    
+    accuracy = c / (c + i)
+    included = (c + i) / (c + i + u)
+    
+    results['label'].append('{}\nAccuracy: {:2.2f}%\nIncluded: {:2.2f}%'.format(clf, 100 * accuracy, 100 * included))
+    results['correct'].append(c)
+    results['uncertain'].append(u)
+    results['incorrect'].append(i)
+    
+    return results

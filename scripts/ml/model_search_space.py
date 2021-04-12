@@ -31,15 +31,16 @@ model_search_space = {
                 'penalty': ['l2'],
                 'solver': ['liblinear', 'lbfgs'],
                 'C': [0.001, 0.01, 0.1, 1, 10],
-                'max_iter': [500]
+                'max_iter': [500],
+                'class_weight': ['balanced']
             },
     ],
     "randomforest": {
-        'n_estimators': [500, 1000],
+        'n_estimators': [100],
         'max_depth': [4, 6, 8, 10],
         'min_samples_leaf': [2, 4, 6, 8, 10],
         'max_features': ['sqrt'],
-        'class_weight': [None, 'balanced'],
+        'class_weight': ['balanced'],
         'bootstrap': [True, False]
     },
     "gradientboosting": {

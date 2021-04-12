@@ -1,19 +1,19 @@
 *__pycache__*
 .snakemake/
 ClassifyCNV-1.1.0/
+AnnotSV-3.0.7/
 
-results/robust/models/randomforest*.json
-results/robust/models_log/randomforest*.json
-results/minmax/models/randomforest*.json
-results/minmax/models_log/randomforest*.json
+results/robust/models/randomforest*.json.gz
+results/robust/models_log/randomforest*.json.gz
+results/minmax/models/randomforest*.json.gz
+results/minmax/models_log/randomforest*.json.gz
 
 !results/README.md
 
-plots/*.jpg
-plots/*.png
 !plots/README.md
 
 results/old
+plots/old
 *ipynb_checkpoints*
 
 data/shap_data/
@@ -21,3 +21,5 @@ data/shap_data/
 scripts/plots/shap_plots.ipynb
 
 scripts/plots/length_stratification.py
+
+*.snakemake*

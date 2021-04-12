@@ -50,7 +50,7 @@ def gridsearch(X_train, Y_train, X_val, Y_val, model, params, modelpath=None,
     """
 
     results = []
-    best_accuracy = 0
+    best_mcc = 0
     
     model = model.lower()
     
@@ -73,7 +73,7 @@ def gridsearch(X_train, Y_train, X_val, Y_val, model, params, modelpath=None,
         
         # class imbalance
         ci = np.sum(Y_train == 0) / np.sum(Y_train == 1)
-        params['scale_pos_weight'] = [1, ci, np.sqrt(ci)]
+        params['scale_pos_weight'] = [ci, np.sqrt(ci)]
     
     params = param_list(params)
     
@@ -91,7 +91,7 @@ def gridsearch(X_train, Y_train, X_val, Y_val, model, params, modelpath=None,
         if model == 'xgboost':
             p['nthread'] = n_jobs
             p['objective'] = 'binary:logistic'
-            temp_model = xgb.train(p, train_dmat, num_boost_round=500, early_stopping_rounds=15,
+            temp_model = xgb.train(p, train_dmat, num_boost_round=100, early_stopping_rounds=15,
                                    evals=[(train_dmat, 'train'), (val_dmat, 'validation')], verbose_eval=0)
             
             # EVALUATE
@@ -112,28 +112,30 @@ def gridsearch(X_train, Y_train, X_val, Y_val, model, params, modelpath=None,
         t_acc = (TN + TP) / (TN + TP + FP + FN)
         t_sens = TP / (TP + FN)
         t_spec = TN / (TN + FP)
-        
+        t_mcc = (TP * TN - FP * FN) / np.sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
+
         (TN, FP), (FN, TP) = confusion_matrix(Y_val, Y_hat_val)
         v_acc = (TN + TP) / (TN + TP + FP + FN)
         v_sens = TP / (TP + FN)
         v_spec = TN / (TN + FP)
+        v_mcc = (TP * TN - FP * FN) / np.sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN))
         
-        if v_acc >= best_accuracy:
+        if v_mcc > best_mcc:
             best_model = deepcopy(temp_model)
-            best_accuracy = v_acc
+            best_mcc = v_mcc
         
-        results.append([p, t_acc, t_sens, t_spec, v_acc, v_sens, v_spec])
+        results.append([p, t_acc, t_sens, t_spec, t_mcc, v_acc, v_sens, v_spec, v_mcc])
     
-    results = pd.DataFrame(results, columns=['params', 'train_accuracy', 'train_sensitivity', 'train_specificity',
-                                             'validation_accuracy', 'validation_sensitivity', 'validation_specificity'])
+    results = pd.DataFrame(results, columns=['params', 'train_accuracy', 'train_sensitivity', 'train_specificity', 'train_mcc',
+                                             'validation_accuracy', 'validation_sensitivity', 'validation_specificity', 'validation_mcc'])
     
-    results = results.sort_values('validation_accuracy', ascending=False)
+    results = results.sort_values('validation_mcc', ascending=False)
     
-    t_acc, tsens, t_spec, v_acc, v_sens, v_spec = results.iloc[0, 1:]
+    t_acc, tsens, t_spec, t_mcc, v_acc, v_sens, v_spec, v_mcc = results.iloc[0, 1:]
     
     print(f'Best model params: {results.iloc[0, 0]}')
-    print('Train:      Accuracy: {:3.3f}, Sensitivity: {:3.3f}, specificity: {:3.3f}'.format(t_acc, t_sens, t_spec))
-    print('Validation: Accuracy: {:3.3f}, Sensitivity: {:3.3f}, specificity: {:3.3f}'.format(v_acc, v_sens, v_spec))
+    print('Train:      Accuracy: {:3.3f}, Sensitivity: {:3.3f}, specificity: {:3.3f}, mcc: {:.3f}'.format(t_acc, t_sens, t_spec, t_mcc))
+    print('Validation: Accuracy: {:3.3f}, Sensitivity: {:3.3f}, specificity: {:3.3f}, mcc: {:.3f}'.format(v_acc, v_sens, v_spec, v_mcc))
     print(best_model)
 
     if modelpath is not None:

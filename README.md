@@ -15,3 +15,21 @@ With carefully selected model hyperparameters, one can achieve more than
 - The `results/` directory contains trained models with their gridsearch results as well as other tables
 - The `plots/` directory contains main and supplementary figures
 
+---
+If attempting to recompute entire workflow, run: 
+
+1. Create conda environment
+
+```
+conda env create --file environment.yml 
+
+conda activate ISV
+```
+
+2. Train models and generate all plots and tables
+
+```
+snakemake --cores <number of cores>
+```
+---
+

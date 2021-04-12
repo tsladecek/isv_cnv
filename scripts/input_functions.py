@@ -9,12 +9,12 @@ def gridsearch_paths(wildcards):
     for transform in ["", "_log"]:
         for cnv_type in ["loss", "gain"]:
             for model in ["lda", "qda", "logisticregression", "randomforest", "xgboost"]:
-                if model == "randomforest" and transform == '_log':
-                    paths.append(f"results/robust/models{transform}/{model}_{cnv_type}{transform}.json.gz")
-                else:
-                    paths.append(f"results/robust/models{transform}/{model}_{cnv_type}{transform}.json")
+                paths.append(f"results/robust/models{transform}/{model}_{cnv_type}{transform}.json")
                 paths.append(f"results/robust/gridsearch_results{transform}/{model}_{cnv_type}{transform}.tsv")
     
+    paths.append("results/ISV_gain.json")
+    paths.append("results/ISV_loss.json")
+
     return paths
 
 def gridsearch_paths_minmax(wildcards):
@@ -22,10 +22,7 @@ def gridsearch_paths_minmax(wildcards):
     for transform in ["", "_log"]:
         for cnv_type in ["loss", "gain"]:
             for model in ["lda", "qda", "logisticregression", "randomforest", "xgboost"]:
-                if model == "randomforest":
-                    paths.append(f"results/minmax/models{transform}/{model}_{cnv_type}{transform}.json.gz")
-                else:
-                    paths.append(f"results/minmax/models{transform}/{model}_{cnv_type}{transform}.json")
+                paths.append(f"results/minmax/models{transform}/{model}_{cnv_type}{transform}.json")
                 paths.append(f"results/minmax/gridsearch_results{transform}/{model}_{cnv_type}{transform}.tsv")
     
     return paths
