@@ -29,6 +29,11 @@ rule all:
         violins            = "plots/isv_violins" + config["FIG_FORMAT"],
         corrplot_loss      = "plots/data_overview_correlations_loss" + config["FIG_FORMAT"],
         corrplot_gain      = "plots/data_overview_correlations_gain" + config["FIG_FORMAT"],
+        digeorge           = "plots/syndroms_shap/digeorge"  + config["FIG_FORMAT"],
+        willi_angelman     = "plots/syndroms_shap/willi_angelman"  + config["FIG_FORMAT"],
+        criduchat          = "plots/syndroms_shap/cri_du_chat"  + config["FIG_FORMAT"],
+        microdel_1p36      = "plots/syndroms_shap/microdel_1p36"  + config["FIG_FORMAT"],
+        wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"], 
         ############################### TABLES ###############################
         metrics                 = "results/tables/metrics.tsv",
         long_loss               = "results/tables/long_cnvs_incorrect_loss.tsv",
