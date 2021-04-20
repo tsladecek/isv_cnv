@@ -25,7 +25,7 @@ from scripts.ml.prepare_df import prepare_df
 from scipy.stats import pointbiserialr
 from scripts.constants import DPI
 
-rcParams.update({'font.size': 15})
+rcParams.update({'font.size': 18})
 
 # %%
 fig, ax = plt.subplots(1, 2, figsize=(25, 14))
@@ -46,6 +46,7 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     ax[i].set_xlabel('log(value)')
     ax[i].set_ylabel('')
     ax[i].set_title('copy number ' + cnv_type)
+    ax[i].legend(title='Clinical Significance')
 
 fig.tight_layout()
 

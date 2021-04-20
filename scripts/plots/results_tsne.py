@@ -22,7 +22,7 @@ from scripts.ml.prepare_df import prepare_df
 from sklearn.manifold import TSNE
 from scripts.constants import DPI
 
-rcParams.update({'font.size': 15})
+rcParams.update({'font.size': 18})
 
 
 # %% TSNE

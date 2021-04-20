@@ -23,13 +23,13 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 from scripts.constants import DPI
 
-rcParams.update({'font.size': 12})
+rcParams.update({'font.size': 15})
 
 # %%
 dataset = snakemake.wildcards.dataset    
 # dataset = 'validation'
 
-fig, ax = plt.subplots(2, 1, figsize=(12, 7))
+fig, ax = plt.subplots(2, 1, figsize=(12, 8))
 
 for i, cnv_type in enumerate(['loss', 'gain']):
     results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
@@ -53,11 +53,15 @@ for i, cnv_type in enumerate(['loss', 'gain']):
                                            color=["#009900", "#C0C0C0", "#FF0000"])
     ax[i].get_legend().remove()
     ax[i].set_ylabel('')
+    
+    ticks = ax[i].get_xticks()
+    ax[i].set_xticklabels(labels=['{:,d}'.format(int(i)) for i in ticks])
+    
 
 ax[0].set_title('Copy Number Loss')
 ax[1].set_title('Copy Number Gain')
 
-fig.suptitle(dataset.capitalize(), fontsize=20)
+# fig.suptitle(dataset.capitalize(), fontsize=20)
 fig.tight_layout()
 
 fig.savefig(snakemake.output.isv_acmg, dpi=DPI)

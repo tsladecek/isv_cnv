@@ -25,7 +25,7 @@ from scripts.constants import modelfmt
 from scripts.constants import DPI
 
 
-rcParams.update({'font.size': 12})
+rcParams.update({'font.size': 15})
 
 # %%
 fig, ax = plt.subplots(2, 1, figsize=(12, 12))
@@ -68,7 +68,7 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     newlabel = []
     for l in labelorder:
         c = sum(res.label == l)
-        newlabel.append(f'{l}\n({c})')
+        newlabel.append('{}\n({:,d})'.format(l, c))
     
     ax[i].set_xticklabels(newlabel)
     

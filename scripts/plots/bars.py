@@ -21,13 +21,16 @@ from scripts.plots.bar_update import bar_update_results
 from matplotlib import rcParams
 from scripts.constants import DPI
 
-rcParams.update({'font.size': 15})
+rcParams.update({'font.size': 18})
 
 # %%
+# dataset = 'validation'
+# scaling = 'robust'
+
 dataset = snakemake.params.dataset
 scaling = snakemake.wildcards.scaling
 
-fig, ax = plt.subplots(3, 2, figsize=(20, 16))
+fig, ax = plt.subplots(3, 2, figsize=(20, 18))
 
 for i, threshold in enumerate([0.5, 0.95, 0.99]):
     for j, cnv_type in enumerate(['loss', 'gain']):
@@ -43,6 +46,8 @@ for i, threshold in enumerate([0.5, 0.95, 0.99]):
                                                color=["#009900", "#C0C0C0", "#FF0000"])
         ax[i, j].get_legend().remove()
         ax[i, j].set_ylabel('')
+        
+        ax[i, j].set_xticklabels(['{:,d}'.format(int(i)) for i in ax[i, j].get_xticks()])
 
 ax[0, 0].set_title('Copy Number Loss')
 ax[0, 1].set_title('Copy Number Gain')
@@ -63,7 +68,7 @@ models  = ['lda', 'qda', 'logisticregression', 'randomforest', 'xgboost']
 cnv_type = ['loss', 'gain']
 
 
-fig, ax = plt.subplots(3, 2, figsize=(20, 16))
+fig, ax = plt.subplots(3, 2, figsize=(20, 18))
 
 for i, threshold in enumerate([0.5, 0.95, 0.99]):
     for j, cnv_type in enumerate(['loss', 'gain']):
