@@ -1,6 +1,37 @@
 import plotly.graph_objects as go
 import pandas as pd
 import numpy as np
+from scripts.ml.prepare_df import prepare
+from scripts.ml.predict import open_model
+from scripts.constants import LOSS_ATTRIBUTES, GAIN_ATTRIBUTES, HUMAN_READABLE, DPI
+import shap
+
+
+# %%
+class _SHAP_values:
+    def __init__(self, data_path, train_data_path, cnv_type, model_path, idx):
+        # load data
+        train_X, train_Y, data_X, data_Y = prepare(cnv_type,
+                                                   train_data_path,
+                                                   data_path, return_train=True)
+        
+        raw = pd.read_csv(data_path, sep='\t', compression='gzip')
+        raw = raw.iloc[idx]
+        attributes = [LOSS_ATTRIBUTES, GAIN_ATTRIBUTES][(cnv_type == 'gain') * 1]
+        
+        # open model
+        model = open_model(model_path)
+        
+        # shap explainer
+        explainer = shap.TreeExplainer(model, train_X, model_output='probability', feature_names=attributes)
+        
+        sv = explainer(data_X[idx])
+        
+        self.values = sv.values
+        self.data = sv.data
+        self.feature_names = [HUMAN_READABLE[i] for i in attributes]
+        self.base_values = sv.base_values[0]
+        self.raw_data = raw.loc[attributes].values.astype(np.int)
 
 
 def _waterfall(shap_values,
@@ -42,7 +73,7 @@ def _waterfall(shap_values,
 
     # add value to the left of the name of the feature
     data["alt_Feature"] = [
-        f'<span style="font-size: 10px; color: gray">({data.raw.iloc[i]})</span> = <span style="font-size: 14px;">{data.Feature.iloc[i]}</span>'
+        f'<span style="font-size: {fontsize-3}px; color: gray">({data.raw.iloc[i]})</span> = <span style="font-size: {fontsize}px;">{data.Feature.iloc[i]}</span>'
         for i in range(len(s.feature_names))]
 
     # Main Bar Plot
@@ -70,19 +101,20 @@ def _waterfall(shap_values,
                   y0=0,
                   x1=s.base_values,
                   y1=len(s.feature_names),
-                  line=dict(color='grey', width=0.3, dash='dash'),
+                  line=dict(color='grey', width=1, dash='dash'),
                   )
 
     # General Layout
     fig.update_layout(
-        template='plotly_white',
+        template='simple_white',
         title=title,
         title_x=0.5,
         showlegend=False,
-        xaxis_title=None,
+        xaxis_title="Attribute Contribution (SHAP probability)",
         yaxis_title=None,
         width=width,
         height=height,
+        plot_bgcolor="#FFF",
         xaxis={"showgrid": True,
                "nticks": 5,
                "range": [0, 1.2]# [s.base_values + np.min(np.cumsum(s.values)) - 0.1, s.base_values + np.max(np.cumsum(s.values)) + 0.1]
@@ -93,8 +125,28 @@ def _waterfall(shap_values,
             font=dict(color='white')
         ),
         font=dict(
-            size=fontsize,    
+            size=fontsize,
+            family="Verdana"
         )
 
     )
     return fig
+
+# %%
+# df = pd.read_csv("data/evaluation_data/five_syndroms.tsv.gz", sep='\t', compression='gzip')
+
+# # %%
+# i = 0
+# shap_vals = _SHAP_values("data/evaluation_data/five_syndroms.tsv.gz",
+#                           "data/train_loss.tsv.gz",
+#                           "loss",
+#                           "results/ISV_loss.json",
+#                           idx=i)
+# pos = f"chr{df.iloc[i].chrom}:{df.iloc[i].start}-{df.iloc[i].end}"
+# fig = _waterfall(shap_vals, height=1000, width=900,
+#                   title=df.iloc[i].info + ', ' + pos,
+#                   fontsize=18)
+
+# fig.write_image("../plotly_example.png",
+#                 format="png",
+#                 scale=DPI/100)
