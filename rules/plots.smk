@@ -28,6 +28,8 @@ rule all_plots:
         criduchat          = "plots/syndroms_shap/cri_du_chat"  + config["FIG_FORMAT"],
         microdel_1p36      = "plots/syndroms_shap/microdel_1p36"  + config["FIG_FORMAT"],
         wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"], 
+        gnomad_loss        = "plots/results_gnomad_loss" + config["FIG_FORMAT"],
+        gnomad_gain        = "plots/results_gnomad_gain" + config["FIG_FORMAT"],
 
 
 rule bars:
@@ -178,3 +180,14 @@ rule five_syndroms:
         "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"], 
     script:
         "../scripts/plots/results_five_syndroms_waterfalls.py"
+
+rule gnomad_plots:
+    input:
+        data  = "data/evaluation_data/gnomad_{cnv_type}.tsv.gz",
+        train = "data/train_{cnv_type}.tsv.gz",
+        model = "results/ISV_{cnv_type}.json",
+    output:
+        gnomad = "plots/results_gnomad_{cnv_type}" + config["FIG_FORMAT"]
+    script:
+        "../scripts/plots/results_gnomad_plots.py"
+
