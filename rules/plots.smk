@@ -29,6 +29,7 @@ rule all_plots:
         microdel_1p36      = "plots/syndroms_shap/microdel_1p36"  + config["FIG_FORMAT"],
         wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"], 
         gnomad             = "plots/gnomad" + config["FIG_FORMAT"],
+        mdmd               = "plots/microdels_microdups" + config["FIG_FORMAT"],
 
 
 rule bars:
@@ -192,4 +193,17 @@ rule gnomad_plots:
         gnomad = "plots/gnomad" + config["FIG_FORMAT"]
     script:
         "../scripts/plots/results_gnomad_plots.py"
+
+rule microdels_microdups:
+    input:
+        data_loss  = "data/evaluation_data/microdeletions.tsv.gz",
+        train_loss = "data/train_loss.tsv.gz",
+        model_loss = "results/ISV_loss.json",
+        data_gain  = "data/evaluation_data/microduplications.tsv.gz",
+        train_gain = "data/train_gain.tsv.gz",
+        model_gain = "results/ISV_gain.json",
+    output:
+        mdmd = "plots/microdels_microdups" + config["FIG_FORMAT"]
+    script:
+        "../scripts/plots/results_microdels_microdups.py"
 
