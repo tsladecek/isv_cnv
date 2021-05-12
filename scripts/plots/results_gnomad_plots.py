@@ -28,44 +28,45 @@ from scripts.constants import DPI
 
 
 # %%
-cnv_type = snakemake.wildcards.cnv_type
+fig, ax = plt.subplots(2, 1, figsize=(10, 14))
 
-df = pd.read_csv(snakemake.input.data, sep='\t', compression='gzip')
+for i, cnv_type in enumerate(["loss", "gain"]):
+        
+    if cnv_type == "loss":
+        df = pd.read_csv(snakemake.input.data_loss, sep='\t', compression='gzip')
+        yh, y = predict(
+            snakemake.input.model_loss,
+            snakemake.input.data_loss,
+            snakemake.input.train_loss, proba=True)
+    elif cnv_type == "gain":
+        df = pd.read_csv(snakemake.input.data_gain, sep='\t', compression='gzip')
+        yh, y = predict(
+            snakemake.input.model_gain,
+            snakemake.input.data_gain,
+            snakemake.input.train_gain, proba=True)
+    
+    df["yh"] = yh
+    
+    # df = pd.read_csv(f"data/evaluation_data/gnomad_{cnv_type}.tsv.gz", sep='\t', compression='gzip')
+    # yh, y = predict(
+    #     f"results/ISV_{cnv_type}.json",
+    #     f"data/evaluation_data/gnomad_{cnv_type}.tsv.gz",
+    #     f"data/train_{cnv_type}.tsv.gz", proba=True)
+    
+    # df["yh"] = yh
 
-yh, y = predict(
-    snakemake.input.model,
-    snakemake.input.data,
-    snakemake.input.train, proba=True)
-
-df["yh"] = yh
-
-
-# %%
-# cnv_type = "loss"
-# df = pd.read_csv(f"data/evaluation_data/gnomad_{cnv_type}.tsv.gz", sep='\t', compression='gzip')
-# yh, y = predict(
-#     f"results/ISV_{cnv_type}.json",
-#     f"data/evaluation_data/gnomad_{cnv_type}.tsv.gz",
-#     f"data/train_{cnv_type}.tsv.gz", proba=True)
-
-# df["yh"] = yh
-
-# %%
-# df = df.iloc[:1000]
-
-# %%
-fig, ax = plt.subplots(1, 1, figsize=(10, 7))
-
-ax.plot(df.AF, df.yh, '.k', alpha=0.2, markersize=3)
-sns.kdeplot(x="AF", y="yh", data=df, ax=ax, color='black')
-
-ax.set_xlabel('Population Frequency (%)')
-ax.set_ylabel('ISV probability')
-
-ax.set_ylim(None, 1)
-
-ax.set_title(f'gnomAD {cnv_type}')
-
+    # df = df.iloc[:1000]
+    
+    ax[i].plot(df.AF, df.yh, '.', c='grey', alpha=0.5, markersize=5, zorder=0)
+    sns.kdeplot(x="AF", y="yh", data=df, ax=ax[i], color='k')
+    
+    ax[i].set_xlabel('Population Frequency (%)')
+    ax[i].set_ylabel('ISV probability')
+    
+    ax[i].set_ylim(None, 1)
+    
+    ax[i].set_title(f'gnomAD {cnv_type}')
+    
 fig.tight_layout()
 
 # %%
