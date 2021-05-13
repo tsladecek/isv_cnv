@@ -33,7 +33,9 @@ rule all:
         willi_angelman     = "plots/syndroms_shap/willi_angelman"  + config["FIG_FORMAT"],
         criduchat          = "plots/syndroms_shap/cri_du_chat"  + config["FIG_FORMAT"],
         microdel_1p36      = "plots/syndroms_shap/microdel_1p36"  + config["FIG_FORMAT"],
-        wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"], 
+        wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"],
+        gnomad             = "plots/gnomad" + config["FIG_FORMAT"],
+        mdmd               = "plots/microdels_microdups" + config["FIG_FORMAT"],
         ############################### TABLES ###############################
         metrics                 = "results/tables/metrics.tsv",
         long_loss               = "results/tables/long_cnvs_incorrect_loss.tsv",
@@ -41,4 +43,3 @@ rule all:
         incorrect_loss          = "results/tables/incorrect_test_loss.tsv",
         incorrect_gain          = "results/tables/incorrect_test_gain.tsv",
         attribute_descriptions  = "results/tables/attribute_descriptions.tsv",
-
