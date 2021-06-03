@@ -3,6 +3,16 @@
 """
 CNV length study
 """
+# %%
+import sys
+import pathlib
+
+# add root path to sys path. Necessary if we want to keep doing package like imports
+
+filepath_list = str(pathlib.Path(__file__).parent.absolute()).split('/')
+ind = filepath_list.index('scripts')
+
+sys.path.insert(1, '/'.join(filepath_list[:ind]))
 
 # %%
 import pandas as pd
@@ -48,7 +58,7 @@ for i, cnv_type in enumerate(["loss", "gain"]):
     
 fig.tight_layout(rect=[0, 0, 1, 0.97])
 
-plt.savefig("../isv_vs_cnv_length.png", dpi=100)
+plt.savefig(snakemake.output.cnv_length, dpi=100)
 
 # %%
 # cnv_type = "gain"

@@ -30,6 +30,7 @@ rule all_plots:
         wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"], 
         gnomad             = "plots/gnomad" + config["FIG_FORMAT"],
         mdmd               = "plots/microdels_microdups" + config["FIG_FORMAT"],
+        cnv_length         = "plots/results_cnv_length_study" + config["FIG_FORMAT"],
 
 
 rule bars:
@@ -207,3 +208,16 @@ rule microdels_microdups:
     script:
         "../scripts/plots/results_microdels_microdups.py"
 
+
+rule cnv_length_study:
+    input:
+        val_loss = "data/validation_loss.tsv.gz",
+        val_gain = "data/validation_gain.tsv.gz",
+        train_loss = "data/train_loss.tsv.gz",
+        model_loss = "results/ISV_loss.json",
+        train_gain = "data/train_gain.tsv.gz",
+        model_gain = "results/ISV_gain.json",
+    output:
+        cnv_length = "plots/results_cnv_length_study" + config["FIG_FORMAT"]
+    script:
+        "../scripts/plots/cnv_length_study.py"
