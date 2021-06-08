@@ -19,7 +19,7 @@ sys.path.insert(1, '/'.join(filepath_list[:ind]))
 import numpy as np
 import pandas as pd
 from scripts.ml.predict import predict
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, roc_auc_score
 
 # %%
 results = {'cnv_type': [],
@@ -39,6 +39,7 @@ results = {'cnv_type': [],
            'negative_predictive_value': [],
            'sensitivity': [],
            'specificity': [],
+           'roc_auc': [],
            'f1_score': [],
            'matthews_correlation_coefficient': [],
            'FNR': [],
@@ -85,6 +86,7 @@ for cnv_type in ['loss', 'gain']:
             results['negative_predictive_value'].append(TN / (TN + FN))
             results['sensitivity'].append(TP / (TP + FN))
             results['specificity'].append(TN / (TN + FP))
+            results['roc_auc'].append(roc_auc_score(y, yhat))
             results['f1_score'].append(2 * TP / (2 * TP + FP + FN))
             results['matthews_correlation_coefficient'].append((TP * TN - FP * FN) / np.sqrt((TP + FP) * (TP + FN) * (TN + FP) * (TN + FN)))
             results['FNR'].append(FN / (FN + TP))
