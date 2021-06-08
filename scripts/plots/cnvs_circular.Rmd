@@ -1,0 +1,127 @@
+---
+title: "cnv_circular"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=9, fig.height=9)
+
+library(circlize)
+library(tidyverse)
+library(rstudioapi)
+
+setwd(dirname(getActiveDocumentContext()$path))
+```
+
+
+
+```{r}
+d <- read_tsv("../../results/chromosome_cnvs.tsv.gz") 
+
+d
+```
+
+
+```{r}
+circos.clear()
+circos.par("start.degree" = 90, "track.height" = 0.1)
+circos.initializeWithIdeogram(species = "hg38")
+
+temp = d %>% select(chrom, start, end, ISV_gain)
+temp <- temp %>% rename(chr=chrom, value=ISV_gain)
+circos.genomicTrack(temp, ylim=c(0, 1), numeric.column="value",
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="orange", area=TRUE, lwd=0.3)
+    }
+)
+
+temp = d %>% select(chrom, start, end, ISV_loss)
+temp <- temp %>% rename(chr=chrom, value=ISV_loss)
+circos.genomicTrack(temp, ylim=c(0, 1),
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="navy", area=TRUE, lwd=0.3)
+    }
+)
+
+temp = d %>% select(chrom, start, end, protein_coding)
+temp <- temp %>% rename(chr=chrom, value=protein_coding)
+circos.genomicTrack(temp,
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="black", lwd=0.5)
+    }
+)
+
+temp = d %>% select(chrom, start, end, regulatory_curated)
+temp <- temp %>% rename(chr=chrom, value=regulatory_curated)
+circos.genomicTrack(temp,
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="darkgreen", lwd=0.5)
+    }
+)
+
+legend(-1.2, -0.95, legend=c("ISV Loss", "ISV Gain", "Protein coding", "Curated Regulatory"),
+        col=c("orange", "navy", "black", "darkgreen"), lty=c(1, 1, 1, 1), horiz=TRUE, bty="n", text.width=0.3)
+```
+
+# Highlight CNV sector 
+
+```{r}
+chromosome_lengths = read_tsv("../../data/grch38-p13_lengths.tsv")
+```
+
+
+```{r}
+chromosome = "chr1"
+start = 68561382
+end = 83945287
+
+chr_length <- c(chromosome_lengths %>% filter(Chromosome == substr(chromosome, 4, 6)))$`Total length (bp)`
+
+start_angle = 90 - 360 * (start / chr_length)
+end_angle = 90 - 360 * (end / chr_length)
+
+cnv_df <- d %>% filter(chrom == chromosome)
+
+circos.clear()
+circos.par("start.degree" = 90, "track.height" = 0.1)
+circos.initializeWithIdeogram(species = "hg38", chromosome.index = chromosome)
+
+temp <- cnv_df %>% select(chrom, start, end, ISV_gain)
+temp <- temp %>% rename(chr=chrom, value=ISV_gain)
+
+circos.genomicTrack(temp, ylim=c(0, 1), numeric.column="value",
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="orange", area=TRUE, lwd=0.3)
+    }
+)
+
+temp <- cnv_df %>% select(chrom, start, end, ISV_loss)
+temp <- temp %>% rename(chr=chrom, value=ISV_loss)
+circos.genomicTrack(temp, ylim=c(0, 1),
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="navy", area=TRUE, lwd=0.3)
+    }
+)
+
+temp = cnv_df %>% select(chrom, start, end, protein_coding)
+temp <- temp %>% rename(chr=chrom, value=protein_coding)
+circos.genomicTrack(temp,
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="black", lwd=0.5)
+    }
+)
+
+temp = cnv_df %>% select(chrom, start, end, regulatory_curated)
+temp <- temp %>% rename(chr=chrom, value=regulatory_curated)
+circos.genomicTrack(temp,
+    panel.fun = function(region, value, ...){
+        circos.genomicLines(region, value, col="darkgreen", lwd=0.5)
+    }
+)
+
+draw.sector(start_angle, end_angle, rou1=1, rou2=0.3, col="#FF000020", clock.wise = TRUE)
+# draw.sector(0 + 90, -10, rou1=1, rou2=0.5, col="#FF000020", clock.wise = TRUE)
+```
+

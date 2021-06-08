@@ -23,3 +23,5 @@ scripts/plots/shap_plots.ipynb
 scripts/plots/length_stratification.py
 
 *.snakemake*
+
+*.Rhistory
