@@ -27,9 +27,9 @@ rcParams.update({'font.size': 15})
 
 # %%
 dataset = snakemake.wildcards.dataset    
-# dataset = 'validation'
+# dataset = 'test'
 
-fig, ax = plt.subplots(2, 1, figsize=(12, 8))
+fig, ax = plt.subplots(2, 1, figsize=(12, 10))
 
 for i, cnv_type in enumerate(['loss', 'gain']):
     results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
@@ -42,6 +42,22 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     
     # MarCNV
     # results = bar_update_results_acmg(results, f'data/marcnv/MarCNV_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
+    
+    # STRVCTVRE - ADD THRESHOLD ??? 
+    strvctvre = pd.read_csv(f"results/strvctvre_{dataset}_{cnv_type}.tsv", sep='\t', header=None).iloc[:, 4].values    
+    y = pd.read_csv(f"data/{dataset}_{cnv_type}.tsv.gz", compression='gzip', sep='\t', usecols=['clinsig']).values
+    
+    strv = pd.DataFrame({'strv': strvctvre.ravel(), 'clinsig': y.ravel()})
+    strv["strv_bin"] = [((float(cnv.strv) > 0.5) * 1) == cnv.clinsig if cnv.strv != "not_exonic" else cnv.strv for _, cnv in strv.iterrows()]
+    
+    results["uncertain"].append(sum(strv.strv == "not_exonic"))
+    
+    c = sum(strv.strv_bin == True)
+    ic = sum(strv.strv_bin == False)
+    results["correct"].append(c)
+    results["incorrect"].append(ic)
+    results["label"].append("StrVCTVRE\nAccuracy: {:.2f}%\nIncluded: {:.2f}%"\
+                            .format(100 * c / (c + ic), 100 * (c + ic) / len(y)))
     
     # ISV
     results = bar_update_results(results, f'results/ISV_{cnv_type}.json', f'data/{dataset}_{cnv_type}.tsv.gz',
