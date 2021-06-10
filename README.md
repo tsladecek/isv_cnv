@@ -12,6 +12,12 @@ With carefully selected model hyperparameters, one can achieve more than
 99% accuracy for both copy number loss and copy number gain variants.
 
 ---
+We do not provide CNV annotation scripts. However if user is able to annotate the CNVs,
+we provide an easy to use pip package for creating predictions. Follow the instructions at:
+
+https://pypi.org/project/isv/
+
+---
 - The `results/` directory contains trained models with their gridsearch results as well as other tables
 - The `plots/` directory contains main and supplementary figures
 
