@@ -25,18 +25,22 @@ from sklearn.preprocessing import StandardScaler
 
 from scripts.ml.gridsearch import gridsearch
 from scripts.ml.predict import predict
+from scripts.constants import DPI
 
 
-rcParams.update({"font.size": 15})
+rcParams.update({"font.size": 20})
 
 
 # %%
 dataset = "validation"
 
-fig, ax = plt.subplots(2, 2, figsize=(20, 14), sharex=True)
+fig, ax = plt.subplots(2, 2, figsize=(20, 10),
+                       gridspec_kw={'height_ratios': [2, 4]},
+                       sharex=True)
 
 
 for i, cnv_type in enumerate(["loss", "gain"]):
+    
     df = pd.read_csv(f"data/{dataset}_{cnv_type}.tsv.gz", sep='\t', compression='gzip')
     
     yhat, y = predict(f"results/ISV_{cnv_type}.json", f"data/{dataset}_{cnv_type}.tsv.gz",
@@ -45,20 +49,21 @@ for i, cnv_type in enumerate(["loss", "gain"]):
     
     clinsig = ["Pathogenic" if i == 1 else "Benign" for i in df.clinsig]
     
-    sns.scatterplot(x=df.length, y=yhat, hue=clinsig, ax=ax[0, i])
-    sns.violinplot(x=df.length, y=clinsig, ax=ax[1, i], orient='h')
     
+    sns.kdeplot(x=df.length, hue=clinsig, ax=ax[0, i], fill=True, common_norm=False)
+    ax[0, i].set_xlim(0, None)
     
-    ax[0, i].set_ylabel("ISV probability")
+    sns.scatterplot(x=df.length, y=yhat, hue=clinsig, ax=ax[1, i])  
+    ax[1, i].get_legend().remove()
+    
+    ax[1, i].set_ylabel("ISV probability")
     ax[0, i].set_title("Copy number " + cnv_type)
     
     ax[1, i].set_xlabel("Length")
-    ax[1, i].set_xlim(0, None)
-    ax[1, i].set_ylabel("Clinical Significance")
     
 fig.tight_layout(rect=[0, 0, 1, 0.97])
 
-plt.savefig(snakemake.output.cnv_length, dpi=100)
+# plt.savefig(snakemake.output.cnv_length, dpi=DPI)
 
 # %%
 # cnv_type = "gain"
