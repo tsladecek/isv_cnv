@@ -25,6 +25,7 @@ d
 
 
 ```{r}
+png(file="../../plots/circos.png", res=150, width=9, height=9, units='in')
 circos.clear()
 circos.par("start.degree" = 90, "track.height" = 0.15)
 circos.initializeWithIdeogram(species = "hg38")
@@ -61,8 +62,10 @@ circos.genomicTrack(temp,
     }
 )
 
-legend(-1.1, -0.95, legend=c("ISV Loss", "ISV Gain", "Protein coding", "Curated Regulatory"),
+legend(-0.95, -0.95, legend=c("ISV Loss", "ISV Gain", "Protein coding", "Curated Regulatory"),
         col=c("orange", "navy", "black", "darkgreen"), lty=c(1, 1, 1, 1), horiz=TRUE, bty="n", text.width=0.3)
+
+dev.off()
 
 ```
 
