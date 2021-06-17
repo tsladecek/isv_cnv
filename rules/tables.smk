@@ -15,12 +15,12 @@ rule metric_table:
         "data/validation_loss.tsv.gz",
         "data/test_loss.tsv.gz",
         "data/test-long_loss.tsv.gz",
-        "data/test-bothchrom_loss.tsv.gz",
+        "data/test-multiple_loss.tsv.gz",
         "data/train_gain.tsv.gz",
         "data/validation_gain.tsv.gz",
         "data/test_gain.tsv.gz",
         "data/test-long_gain.tsv.gz",
-        "data/test-bothchrom_gain.tsv.gz",
+        "data/test-multiple_gain.tsv.gz",
     output:
         "results/tables/metrics.tsv"
     script:

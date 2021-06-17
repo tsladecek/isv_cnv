@@ -30,7 +30,7 @@ fig, ax = plt.subplots(2, 1, figsize=(12, 7))
 for k, cnv_type in enumerate(['loss', 'gain']):
     r = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
     
-    for d in ['test', 'test-bothchrom']:
+    for d in ['test', 'test-multiple']:
         yh, y = predict(modelfmt.format(cnv_type), f'data/{d}_{cnv_type}.tsv.gz',
                         f'data/train_{cnv_type}.tsv.gz', proba=True)
         

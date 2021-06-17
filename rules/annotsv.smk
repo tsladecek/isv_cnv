@@ -4,12 +4,12 @@ rule all_annotsv:
         "data/annotsv/annotsv_validation_loss.tsv",
         "data/annotsv/annotsv_test_loss.tsv",
         "data/annotsv/annotsv_test-long_loss.tsv",
-        "data/annotsv/annotsv_test-bothchrom_loss.tsv",
+        "data/annotsv/annotsv_test-multiple_loss.tsv",
         "data/annotsv/annotsv_train_gain.tsv",
         "data/annotsv/annotsv_validation_gain.tsv",
         "data/annotsv/annotsv_test_gain.tsv",
         "data/annotsv/annotsv_test-long_gain.tsv",
-        "data/annotsv/annotsv_test-bothchrom_gain.tsv",
+        "data/annotsv/annotsv_test-multiple_gain.tsv",
 
 # rule download_annotsv:
 #     output:

@@ -51,7 +51,7 @@ results = {'cnv_type': [],
 # %%
 for cnv_type in ['loss', 'gain']:
     for threshold in [0.5, 0.95, 0.99]:
-        for dataset in ['train', 'validation', 'test', 'test-long', 'test-bothchrom']:
+        for dataset in ['train', 'validation', 'test', 'test-long', 'test-multiple']:
 
             preds, y = predict(f'results/ISV_{cnv_type}.json', f'data/{dataset}_{cnv_type}.tsv.gz',
                                f'data/train_{cnv_type}.tsv.gz', proba=True)

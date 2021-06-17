@@ -23,8 +23,6 @@ from scripts.ml.predict import predict
 from scripts.plots.bar_update import bar_update_results_acmg
 
 # %% Clinvar Stars Evaluation
-# for dataset in ['test', 'test-bothchrom']:
-#     for cnv_type in ['loss', 'gain']:
     
 cnv_type = snakemake.wildcards.cnv_type
 

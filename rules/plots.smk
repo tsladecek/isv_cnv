@@ -16,7 +16,7 @@ rule all_plots:
         tsne               = "plots/data_overview_tsne" + config["FIG_FORMAT"],
         isv_acmg_test      = "plots/isv_acmg_test" + config["FIG_FORMAT"],
         isv_acmg_test_long = "plots/isv_acmg_test-long" + config["FIG_FORMAT"],
-        isv_acmg_test_both = "plots/isv_acmg_test-bothchrom" + config["FIG_FORMAT"],
+        isv_acmg_test_both = "plots/isv_acmg_test-multiple" + config["FIG_FORMAT"],
         multiplicity       = "plots/bars_multiplicity" + config["FIG_FORMAT"],
         shap_swarm_loss    = "plots/shap_swarm_validation_loss" + config["FIG_FORMAT"],
         shap_swarm_gain    = "plots/shap_swarm_validation_gain" + config["FIG_FORMAT"],
@@ -110,9 +110,9 @@ rule isv_acmg_comparison:
 rule multiplicity:
     input:
         test_loss = "data/test_loss.tsv.gz",
-        test_bothchrom_loss = "data/test-bothchrom_loss.tsv.gz",
+        test_multiple_loss = "data/test-multiple_loss.tsv.gz",
         test_gain = "data/test_gain.tsv.gz",
-        test_bothchrom_gain = "data/test-bothchrom_gain.tsv.gz",
+        test_bothchrom_gain = "data/test-multiple_gain.tsv.gz",
         isv_loss = "results/ISV_loss.json",
         isv_gain = "results/ISV_gain.json",
     output:

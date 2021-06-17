@@ -10,8 +10,8 @@ rule all_classifycnv:
         test_gain = "data/classifycnv/classifycnv_test_gain.tsv",
         test_long_loss = "data/classifycnv/classifycnv_test-long_loss.tsv",
         test_long_gain = "data/classifycnv/classifycnv_test-long_gain.tsv",
-        test_bothchrom_loss = "data/classifycnv/classifycnv_test-bothchrom_loss.tsv",
-        test_bothchrom_gain = "data/classifycnv/classifycnv_test-bothchrom_gain.tsv",
+        test_multiple_loss = "data/classifycnv/classifycnv_test-multiple_loss.tsv",
+        test_multiple_gain = "data/classifycnv/classifycnv_test-multiple_gain.tsv",
 
 rule classifycnv:
     """Run ClassifyCNV on Test loss CNVs and Test gain CNVs"""
