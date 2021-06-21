@@ -76,7 +76,7 @@ for i, cnv_type in enumerate(['loss', 'gain']):
         violin.set_alpha(0.4)
         
     ax[i].set_title(f'Copy number {cnv_type}')
-    ax[i].set_ylabel(f'Pathogenicity Prediction')
+    ax[i].set_ylabel(f'ISV probability')
     ax[i].set_xlabel('')
     
     ax[i].set_ylim(-0.2, 1.2)
