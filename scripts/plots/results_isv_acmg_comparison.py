@@ -56,7 +56,7 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     ic = sum(strv.strv_bin == False)
     results["correct"].append(c)
     results["incorrect"].append(ic)
-    results["label"].append("StrVCTVRE\nAccuracy: {:.2f}%\nIncluded: {:.2f}%"\
+    results["label"].append("StrVCTVRE\nAccuracy: {:.2f} %\nIncluded: {:.2f} %"\
                             .format(100 * c / (c + ic), 100 * (c + ic) / len(y)))
     
     # ISV

@@ -41,7 +41,7 @@ def bar_update_results(results, model_path, data_path, threshold=0.5, train_data
         results['label'].append(custom_label)
     else:
         
-        results['label'].append('{}\nAccuracy: {:2.2f}%\nIncluded: {:2.2f}%'.format(model, 100 * accuracy, 100 *  (c + i) / (c + i + u)))
+        results['label'].append('{}\nAccuracy: {:2.2f} %\nIncluded: {:2.2f} %'.format(model, 100 * accuracy, 100 *  (c + i) / (c + i + u)))
     
     results['correct'].append(c)
     results['incorrect'].append(i)
@@ -136,7 +136,7 @@ def bar_update_results_acmg(results, filepath, likely_is_uncertain=True, return_
     accuracy = c / (c + i)
     included = (c + i) / (c + i + u)
     
-    results['label'].append('{}\nAccuracy: {:2.2f}%\nIncluded: {:2.2f}%'.format(clf, 100 * accuracy, 100 * included))
+    results['label'].append('{}\nAccuracy: {:2.2f} %\nIncluded: {:2.2f} %'.format(clf, 100 * accuracy, 100 * included))
     results['correct'].append(c)
     results['uncertain'].append(u)
     results['incorrect'].append(i)
