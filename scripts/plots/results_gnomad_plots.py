@@ -28,7 +28,7 @@ from scripts.constants import DPI
 
 
 # %%
-fig, ax = plt.subplots(2, 1, figsize=(10, 14))
+fig, ax = plt.subplots(1, 2, figsize=(20, 7))
 
 for i, cnv_type in enumerate(["loss", "gain"]):
         
