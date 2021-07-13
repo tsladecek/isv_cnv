@@ -42,7 +42,7 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     pmax = pathogenic.max(axis=0).values.reshape(-1, 1)
     
     res = np.concatenate([bmean, bstd, bmax, pmean, pstd, pmax], axis=1)
-    res = pd.DataFrame(res, columns=[f"{metric}_{clinsig}" for metric in ["Mean", "StD", "Max"] for clinsig in ["Benign", "Pathogenic"]])
+    res = pd.DataFrame(res, columns=[f"{metric}_{clinsig}" for clinsig in ["Benign", "Pathogenic"] for metric in ["Mean", "StD", "Max"]])
     res.insert(0, "Attribute", attributes)
     
     final.append(res)
