@@ -49,4 +49,4 @@ for i, cnv_type in enumerate(['loss', 'gain']):
 
 merged = pd.merge(final[0], final[1], on="Attribute", how="outer")
 
-merged.to_csv(snakemake.output.data_overview, sep='\t', index=False)
+merged.to_csv(snakemake.output.data_overview, sep='\t', index=False, decimal=',')
