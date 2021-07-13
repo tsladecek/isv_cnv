@@ -6,6 +6,7 @@ rule all_tables:
         "results/tables/incorrect_test_loss.tsv",
         "results/tables/incorrect_test_gain.tsv",
         "results/tables/attribute_descriptions.tsv",
+        "results/tables/data_overview.tsv"
 
 rule metric_table:
     input:
@@ -59,3 +60,14 @@ rule attribute_descriptions:
         "results/tables/attribute_descriptions.tsv"
     script:
         "../scripts/results/attribute_overview.py"
+
+rule data_overview:
+    input:
+        "data/train_loss.tsv.gz",
+        "data/validation_loss.tsv.gz",
+        "data/train_gain.tsv.gz",
+        "data/validation_gain.tsv.gz",
+    output:
+        data_overview = "results/tables/data_overview.tsv"
+    script:
+        "../scripts/results/data_overview.py"
