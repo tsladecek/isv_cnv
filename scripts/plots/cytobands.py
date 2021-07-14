@@ -1,10 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # %%
+import sys
+import pathlib
+
+# add root path to sys path. Necessary if we want to keep doing package like imports
+
+filepath_list = str(pathlib.Path(__file__).parent.absolute()).split('/')
+ind = filepath_list.index('scripts')
+
+sys.path.insert(1, '/'.join(filepath_list[:ind]))
+# %%
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from scripts.constants import DPI
 
 from matplotlib import rcParams
 
@@ -12,8 +23,11 @@ from matplotlib import rcParams
 rcParams.update({'font.size': 15})
 
 # %%
-cytobands = pd.read_csv("data/cytobands.tsv", sep='\t')
-chrom_cnvs = pd.read_csv("results/chromosome_cnvs.tsv.gz", sep='\t', compression='gzip')
+# cytobands = pd.read_csv("data/cytobands.tsv", sep='\t')
+# chrom_cnvs = pd.read_csv("results/chromosome_cnvs.tsv.gz", sep='\t', compression='gzip')
+
+cytobands = pd.read_csv(snakemake.input.cytobands, sep='\t')
+chrom_cnvs = pd.read_csv(snakemake.input.chromosome_cnvs, sep='\t', compression='gzip')
 
 # %%
 # replace starting base index to 0
@@ -49,13 +63,28 @@ merged = pd.merge(mb, chrom_cnvs, on=["chrom", "start", "end"])
 
 merged = merged.loc[:, ["chrom", "start", "end", "stain", "ISV_loss", "ISV_gain"]]
 # %%
-merged.to_csv("results/chromosome_stains_ISV.tsv", sep='\t', index=False)
+# merged.to_csv("results/chromosome_stains_ISV.tsv", sep='\t', index=False)
+
 # %%
-fig, ax = plt.subplots(1, 2, figsize=(20, 7))
+merged = merged.query("stain != 'acen'").query("stain != 'gvar'").query("stain != 'stalk'")
+# %%
+
+fig, ax = plt.subplots(2, 1, figsize=(12, 14))
 
 for i, cnv_type in enumerate(["loss", "gain"]):
-    sns.boxplot(x="stain", y=f"ISV_{cnv_type}", data=merged, ax=ax[i])
+    
+    sns.stripplot(x="stain", y=f"ISV_{cnv_type}", data=merged, ax=ax[i],
+                  color='green',
+                  alpha=0.2,
+                  # palette={"gneg": "black", "gpos25": "black", "gpos50": "black", 
+                  #        "gpos75": "black", "gpos100": "white"}
+                  )
+    sns.boxplot(x="stain", y=f"ISV_{cnv_type}", data=merged, ax=ax[i],
+                palette={"gneg": "white", "gpos25": "#f0f0f0", "gpos50": "#c0c0c0", 
+                         "gpos75": "#808080", "gpos100": "#202020"})
+    
     # sns.violinplot(x="band", y=f"ISV_{cnv_type}", data=merged, ax=ax[i])
     ax[i].set_ylim(0, 1)
-    
-# %%
+
+plt.tight_layout()
+plt.savefig(snakemake.output.stains, dpi=DPI)

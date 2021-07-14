@@ -31,6 +31,7 @@ rule all_plots:
         gnomad             = "plots/gnomad" + config["FIG_FORMAT"],
         mdmd               = "plots/microdels_microdups" + config["FIG_FORMAT"],
         cnv_length         = "plots/results_cnv_length_study" + config["FIG_FORMAT"],
+        stains             = "plots/stains_boxplot" + config["FIG_FORMAT"],
 
 
 rule bars:
@@ -221,3 +222,12 @@ rule cnv_length_study:
         cnv_length = "plots/results_cnv_length_study" + config["FIG_FORMAT"]
     script:
         "../scripts/plots/cnv_length_study.py"
+
+rule stains:
+    input:
+        cytobands = "data/cytobands.tsv",
+        chromosome_cnvs = "results/chromosome_cnvs.tsv.gz"
+    output:
+        stains = "plots/stains_boxplot" + config["FIG_FORMAT"]
+    script:
+        "../scripts/plots/cytobands.py"
