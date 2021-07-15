@@ -33,13 +33,13 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     benign = X.query("y == 'Benign'").drop("y", axis=1)
     pathogenic = X.query("y == 'Pathogenic'").drop("y", axis=1)
     
-    bmean = benign.mean(axis=0).values.reshape(-1, 1)
-    bstd = benign.std(axis=0).values.reshape(-1, 1)
-    bmax = benign.max(axis=0).values.reshape(-1, 1)
+    bmean = np.round(benign.mean(axis=0).values.reshape(-1, 1), 2)
+    bstd = np.round(benign.std(axis=0).values.reshape(-1, 1), 2)
+    bmax = np.round(benign.max(axis=0).values.reshape(-1, 1), 2)
     
-    pmean = pathogenic.mean(axis=0).values.reshape(-1, 1)
-    pstd = pathogenic.std(axis=0).values.reshape(-1, 1)
-    pmax = pathogenic.max(axis=0).values.reshape(-1, 1)
+    pmean = np.round(pathogenic.mean(axis=0).values.reshape(-1, 1), 2)
+    pstd = np.round(pathogenic.std(axis=0).values.reshape(-1, 1), 2)
+    pmax = np.round(pathogenic.max(axis=0).values.reshape(-1, 1), 2)
     
     res = np.concatenate([bmean, bstd, bmax, pmean, pstd, pmax], axis=1)
     res = pd.DataFrame(res, columns=[f"{metric}_{clinsig}" for clinsig in ["Benign", "Pathogenic"] for metric in ["Mean", "StD", "Max"]])
@@ -49,4 +49,4 @@ for i, cnv_type in enumerate(['loss', 'gain']):
 
 merged = pd.merge(final[0], final[1], on="Attribute", how="outer")
 
-merged.to_csv(snakemake.output.data_overview, sep='\t', index=False, decimal=',')
+merged.to_csv(snakemake.output.data_overview, sep='\t', index=False)
