@@ -34,11 +34,16 @@ fig, ax = plt.subplots(2, 1, figsize=(12, 10))
 for i, cnv_type in enumerate(['loss', 'gain']):
     results = {'label': [], 'correct': [], 'uncertain': [], 'incorrect': []}
     
+    if "-clear" in snakemake.output.isv_acmg:
+        liu=False
+    else:
+        liu=True
+    
     # ClassifyCNV
-    results = bar_update_results_acmg(results, f'data/classifycnv/classifycnv_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
+    results = bar_update_results_acmg(results, f'data/classifycnv/classifycnv_{dataset}_{cnv_type}.tsv', likely_is_uncertain=liu)
     
     # AnnotSV
-    results = bar_update_results_acmg(results, f'data/annotsv/annotsv_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
+    results = bar_update_results_acmg(results, f'data/annotsv/annotsv_{dataset}_{cnv_type}.tsv', likely_is_uncertain=liu)
     
     # MarCNV
     # results = bar_update_results_acmg(results, f'data/marcnv/MarCNV_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
