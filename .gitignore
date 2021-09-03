@@ -25,3 +25,6 @@ scripts/plots/length_stratification.py
 *.snakemake*
 
 *.Rhistory
+
+*.idea*
+scripts/plots/logo.Rmd

@@ -74,20 +74,8 @@ def bar_update_results_acmg(results, filepath, likely_is_uncertain=True, return_
     df = pd.read_csv(f'data/{dataset}_{cnv_type}.tsv.gz', compression='gzip', sep='\t')
     
     # Reorder and add real label to the acmg dataset
-    if clf == 'MarCNV':
-    
-        inds = np.empty(len(df))
-        for i in range(len(df)):
-            c, s, e = df.iloc[i].loc[['chr', 'start_hg38', 'end_hg38']]
-            inds[i] = np.where((acmg.chr == c) & (acmg.start == s) & (acmg.end == e))[0][0]
-        
-        acmg = acmg.iloc[inds]
-        acmg = acmg.reset_index(drop=True)
-    
-        severity = acmg.severity
-        severity = severity.replace({'Uncertain': 'Uncertain significance'})
-    
-    elif clf == 'classifycnv':
+
+    if clf == 'classifycnv':
         inds = np.empty(len(df))
         for i in range(len(df)):
             c, s, e = df.iloc[i].loc[['chr', 'start_hg38', 'end_hg38']]

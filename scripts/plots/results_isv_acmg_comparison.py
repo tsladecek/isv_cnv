@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Comparison of ISV with MarCNV and ClassifyCNV
+Comparison of ISV with StrVCTVRE, AnnotSV and ClassifyCNV
 """
 # %%
 import sys
@@ -44,10 +44,7 @@ for i, cnv_type in enumerate(['loss', 'gain']):
     
     # AnnotSV
     results = bar_update_results_acmg(results, f'data/annotsv/annotsv_{dataset}_{cnv_type}.tsv', likely_is_uncertain=liu)
-    
-    # MarCNV
-    # results = bar_update_results_acmg(results, f'data/marcnv/MarCNV_{dataset}_{cnv_type}.tsv', likely_is_uncertain=True)
-    
+
     # STRVCTVRE - ADD THRESHOLD ??? 
     strvctvre = pd.read_csv(f"results/strvctvre_{dataset}_{cnv_type}.tsv", sep='\t', header=None).iloc[:, 4].values    
     y = pd.read_csv(f"data/{dataset}_{cnv_type}.tsv.gz", compression='gzip', sep='\t', usecols=['clinsig']).values

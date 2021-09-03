@@ -93,3 +93,48 @@ fig.tight_layout()
 
 plt.savefig(snakemake.output.pbcc, dpi=DPI)
 # plt.savefig('plots/data_overview_pbcc.png')
+
+# %%
+from sklearn.preprocessing import MinMaxScaler
+
+
+fig, ax = plt.subplots(1, 2, figsize=(25, 12))
+
+for i, cnv_type in enumerate(['loss', 'gain']):
+    attributes = [LOSS_ATTRIBUTES, GAIN_ATTRIBUTES][(cnv_type == 'gain') * 1]
+    # translate to human readable
+    hr_attributes = [HUMAN_READABLE[i] for i in attributes]
+    
+    train_X = pd.read_csv(f"data/train_{cnv_type}.tsv.gz", sep='\t', compression='gzip', usecols=attributes + ["clinsig", "length"])
+    train_X.columns = ["y", "length"] + hr_attributes
+    val_X = pd.read_csv(f"data/validation_{cnv_type}.tsv.gz", sep='\t', compression='gzip', usecols=attributes + ["clinsig", "length"])
+    val_X.columns = ["y", "length"] + hr_attributes
+    
+    X = pd.concat([train_X, val_X])
+    
+    # LENGTH CORRECTION - counts divided by length
+    X.iloc[:, 2:] = X.iloc[:, 2:].values / X.iloc[:, 1].values.reshape(-1, 1)
+    
+    pbcc = {"attribute": [], "value": [], "abs_value": []}
+    for a in X:
+        if a not in ["y", "length"]:
+            pbcc["attribute"].append(a)
+            val = pointbiserialr(X.loc[:, a], X.y).correlation
+            pbcc["value"].append(val)
+            pbcc["abs_value"].append(np.abs(val))
+            
+    pbcc = pd.DataFrame(pbcc)
+    pbcc = pbcc.sort_values('abs_value', ascending=True)
+    
+    for k, v in enumerate(pbcc.value.values):
+        ax[i].plot([np.min([0, v]), np.max([0, v])], [k, k], color='grey', lw=3)
+        
+    ax[i].plot(pbcc.value, pbcc.attribute, 'X', markersize=20, color='k')
+        
+    ax[i].set_xlabel('Point Biserial Correlation Coefficient')
+    ax[i].set_ylabel('')
+    ax[i].set_title('copy number ' + cnv_type)
+    
+    ax[i].xaxis.grid(linestyle='--')
+
+fig.tight_layout()

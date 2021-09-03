@@ -12,20 +12,29 @@ With carefully selected model hyperparameters, one can achieve more than
 99% accuracy for both copy number loss and copy number gain variants.
 
 ---
-We do not provide CNV annotation scripts. However if user is able to annotate the CNVs,
-we provide an easy to use pip package for creating predictions. Follow the instructions at:
+### Annotation and Prediction of novel CNVs
 
+The **annotation**, **prediction of pathogenicity** as well as calculation of **shap values** for novel cnvs can be easily done using the isv python package:
 https://pypi.org/project/isv/
 
+or as a **command line tool**. Follow instructions at https://github.com/tsladecek/isv_package for more info
+
 ---
+Project directory Structure
+
+- The `data/` folder contains raw data that was used for training the models and for the evaluation
+  - in the root of `data/` folder one can find annotated cnvs from clinvar, separated into several datasets (`train`, `validation`, `test`, `test-long`, `test-multiple`) for each cnv type (`loss` and `gain`)
+  - annotations by `annotsv` and `classifycnv` are inside of separate directories under the same name
+  - annotated `gnomad` dataset, `microdeletions` and `microduplications`, `genome cnvs` and `five studied syndromes` are under directory `data/evaludation_data`
 - The `results/` directory contains trained models with their gridsearch results as well as other tables
 - The `plots/` directory contains main and supplementary figures
-
+- The `scripts/` directory contains scripts for generating the results and training of models
+- The `rules/` directory contains *snakemake* definitions, which are collected by the `Snakefile` at the root of the repository
 ---
-If attempting to recompute entire workflow, run: 
+To reproduce entire workflow, except of the circos plot and stains plot, run: 
 
 1. Create conda environment
-
+- we recommend using conda for best chance of reproducibility. The versions of all of the packages are listed in the `environment.yml` file
 ```
 conda env create --file environment.yml 
 
@@ -38,4 +47,6 @@ conda activate ISV
 snakemake --cores <number of cores>
 ```
 ---
+To reproduce the circos plot and the stains comparison plot see `scripts/plots/cnvs_circular.Rmd` and `scripts/plots/chromosome_stains_study.Rmd`
 
+These scripts are written in `R` language and require `tidyverse` and `circlize` packages to be installed. 
