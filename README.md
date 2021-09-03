@@ -35,6 +35,7 @@ To reproduce entire workflow, except of the circos plot and stains plot, run:
 
 1. Create conda environment
 - we recommend using conda for best chance of reproducibility. The versions of all of the packages are listed in the `environment.yml` file
+- The scripts will likely only work on a `linux machine`
 ```
 conda env create --file environment.yml 
 
