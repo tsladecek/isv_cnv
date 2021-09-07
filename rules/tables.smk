@@ -6,7 +6,8 @@ rule all_tables:
         "results/tables/incorrect_test_loss.tsv",
         "results/tables/incorrect_test_gain.tsv",
         "results/tables/attribute_descriptions.tsv",
-        "results/tables/data_overview.tsv"
+        "results/tables/data_overview.tsv",
+        "results/tables/clinvar_isv_summary.tsv"
 
 rule metric_table:
     input:
@@ -61,7 +62,7 @@ rule attribute_descriptions:
     script:
         "../scripts/results/attribute_overview.py"
 
-rule data_overview:
+rule data_overview_table:
     input:
         "data/train_loss.tsv.gz",
         "data/validation_loss.tsv.gz",
@@ -71,3 +72,15 @@ rule data_overview:
         data_overview = "results/tables/data_overview.tsv"
     script:
         "../scripts/results/data_overview.py"
+
+rule clinvar_isv_summary:
+    input:
+        "results/ISV_loss.json", 
+        "data/test_loss.tsv.gz",
+        "results/ISV_gain.json", 
+        "data/test_gain.tsv.gz",
+    output:
+        clinvar_isv_summary = "results/tables/clinvar_isv_summary.tsv"
+    script:
+        "../scripts/results/clinvar_isv_summary_table.py"
+

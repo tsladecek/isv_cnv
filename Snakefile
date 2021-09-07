@@ -36,6 +36,8 @@ rule all:
         wolf_hirchhorn     = "plots/syndroms_shap/wolf_hirschhorn"  + config["FIG_FORMAT"],
         gnomad             = "plots/gnomad" + config["FIG_FORMAT"],
         mdmd               = "plots/microdels_microdups" + config["FIG_FORMAT"],
+        cnv_length         = "plots/results_cnv_length_study" + config["FIG_FORMAT"],
+        stains             = "plots/stains_boxplot" + config["FIG_FORMAT"],
         ############################### TABLES ###############################
         metrics                 = "results/tables/metrics.tsv",
         long_loss               = "results/tables/long_cnvs_incorrect_loss.tsv",
@@ -43,3 +45,5 @@ rule all:
         incorrect_loss          = "results/tables/incorrect_test_loss.tsv",
         incorrect_gain          = "results/tables/incorrect_test_gain.tsv",
         attribute_descriptions  = "results/tables/attribute_descriptions.tsv",
+        data_overview_table     = "results/tables/data_overview.tsv",
+        clinvar_isv_summary     = "results/tables/clinvar_isv_summary.tsv"

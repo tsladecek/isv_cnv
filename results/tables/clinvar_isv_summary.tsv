@@ -1,0 +1,5 @@
+cnv_type	clinvar	ISV-Benign	ISV-Pathogenic	ISV-Uncertain_significance
+loss	Benign	1062	6	221
+loss	Pathogenic	11	413	116
+gain	Benign	1162	2	97
+gain	Pathogenic	13	115	23
