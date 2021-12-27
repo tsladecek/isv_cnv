@@ -33,6 +33,7 @@ rule all_plots:
         mdmd                = "plots/microdels_microdups" + config["FIG_FORMAT"],
         cnv_length          = "plots/results_cnv_length_study" + config["FIG_FORMAT"],
         stains              = "plots/stains_boxplot" + config["FIG_FORMAT"],
+        forceplot           = "plots/shap_forceplot" + config["FIG_FORMAT"],
 
 
 rule bars:
@@ -232,3 +233,13 @@ rule stains:
         stains = "plots/stains_boxplot" + config["FIG_FORMAT"]
     script:
         "../scripts/plots/cytobands.py"
+
+rule forceplot:
+    input:
+        model = "results/ISV_loss.json",
+        data = "data/evaluation_data/five_syndroms.tsv.gz",
+        train= "data/train_loss.tsv.gz",
+    output:
+        forceplot = "plots/shap_forceplot" + config["FIG_FORMAT"]
+    script:
+        "../scripts/plots/results_shap_forceplot.py"
