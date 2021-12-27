@@ -4,7 +4,7 @@
 CNV specific constants and attribute lists
 """
 
-DPI = 200
+DPI = 600
 
 modelfmt = 'results/ISV_{}.json'
 

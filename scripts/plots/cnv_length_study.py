@@ -63,7 +63,7 @@ for i, cnv_type in enumerate(["loss", "gain"]):
     
 fig.tight_layout(rect=[0, 0, 1, 0.97])
 
-# plt.savefig(snakemake.output.cnv_length, dpi=DPI)
+plt.savefig(snakemake.output.cnv_length, dpi=DPI)
 
 # %%
 # cnv_type = "gain"

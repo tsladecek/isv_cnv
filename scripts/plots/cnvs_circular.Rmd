@@ -25,7 +25,8 @@ d
 
 
 ```{r}
-png(file="../../plots/circos.png", res=150, width=9, height=9, units='in')
+# png(file="../../plots/circos.png", res=600, width=9, height=9, units='in')
+jpeg(file="../../plots/circos.jpeg", res=600, width=9, height=9, units='in')
 circos.clear()
 circos.par("start.degree" = 90, "track.height" = 0.15)
 circos.initializeWithIdeogram(species = "hg38")
