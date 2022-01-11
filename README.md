@@ -51,3 +51,7 @@ snakemake --cores <number of cores>
 To reproduce the circos plot and the stains comparison plot see `scripts/plots/cnvs_circular.Rmd` and `scripts/plots/chromosome_stains_study.Rmd`
 
 These scripts are written in `R` language and require `tidyverse` and `circlize` packages to be installed. 
+
+---
+## If you mention or use the ISV tool, please cite our article
+https://www.nature.com/articles/s41598-021-04505-z
